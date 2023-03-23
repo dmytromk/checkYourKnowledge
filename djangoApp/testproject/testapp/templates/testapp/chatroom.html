@@ -3,13 +3,13 @@
 <html>
 <head>
     <meta charset="utf-8"/>
-    <title>Chat Room</title>
+    <title>ClassRoom</title>
 </head>
 <body>
     <textarea id="chat-log" cols="100" rows="20"></textarea><br>
     <input id="chat-message-input" type="text" size="100"><br>
-    <input id="chat-message-submit" type="button" value="Send">
-
+    <input id="chat-message-submit" type="button" value="Send"><br>
+    <input id="createTask" type="button" value="create Task"><br>
 
     <script>
          var roomName = '{{room_name}}';
@@ -56,6 +56,15 @@
 
             }));
             messageInputDom.value = '';
+        };
+         document.querySelector('createTask').onclick = function(e) {
+            const messageInputDom = document.querySelector('#chat-message-input');
+            
+
+            chatSocket.send(JSON.stringify({
+                'command' : 'createTask',
+            }));
+            window.location.pathname = '/chat/' + roomName + '/' + 'task_1/';
         };
     </script>
 </body>
