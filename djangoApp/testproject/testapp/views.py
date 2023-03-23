@@ -7,10 +7,12 @@ from django.contrib.auth.decorators import login_required
 
 def home(request):
     return  render(request, 'testapp/home.html', {})
+
+
 @login_required
 def room(request, room_name):
     return render(request, 'testapp/chatroom.html', {
         'room_name': room_name,
-        'username' : mark_safe(json.dumps(request.user.username)),
+        'username': mark_safe(json.dumps(request.user.username)),
 
     })

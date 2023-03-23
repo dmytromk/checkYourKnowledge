@@ -132,3 +132,5 @@ CHANNEL_LAYERS = {
         "BACKEND": "channels.layers.InMemoryChannelLayer"
     }
 }
+
+os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
