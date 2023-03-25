@@ -8,11 +8,8 @@
     <option name="TEMPLATE_CONFIGURATION" value="Jinja2" />
     <option name="TEMPLATE_FOLDERS">
       <list>
-        <option value="$MODULE_DIR$/djangoApp/testproject/testapp/templates" />
+        <option value="$MODULE_DIR$/djangoApp/templates" />
       </list>
     </option>
-  </component>
-  <component name="TestRunnerService">
-    <option name="PROJECT_TEST_RUNNER" value="py.test" />
   </component>
 </module>
