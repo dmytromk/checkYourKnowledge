@@ -2,11 +2,9 @@ from django.shortcuts import render
 from django.utils.safestring import mark_safe
 import json
 from django.contrib.auth.decorators import login_required
-# Create your views here.
-
 
 def home(request):
-    return  render(request, 'home.html', {})
+    return render(request, 'home.html', {})
 
 
 @login_required

@@ -1,21 +1,28 @@
 {% extends "base.html" %}
 {% block title %}Log-in{% endblock %}
 {% block content %}
-    <h1>Log-in</h1>
-    {% if form.errors %}
-        <p>
-            Your username and password didn't match.
-            Please try again.
-        </p>
-    {% else %}
-        <p>Please, use the following form to log-in:</p>
-    {% endif %}
-    <div class="login-form">
-        <form action="{% url 'login' %}" method="post">
-            {{ form.as_p }}
+    <div class="center">
+
+        <form method="post" class="card" novalidate>
             {% csrf_token %}
-            <input type="hidden" name="next" value="{{ next }}"/>
-            <p><input type="submit" value="Log-in"></p>
+            <h2 class="text-center">Log in to your account</h2>
+            {% for field in form %}
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.errors %}
+                    <small>{{ field.errors|striptags }}</small>
+                {% endif %}
+            {% endfor %}
+
+            <input type="submit" value="Login">
+
+            {% if form.errors %}
+                <p>Your username and password didn't match. Please try again.</p>
+            {% endif %}
+            <hr>
+
+            <p class="text-center">Forgot your password? <a href="#">Reset Password</a></p>
+            <p class="text-center">Don't have an account yet? <a href="#">Join Now!</a></p>
         </form>
     </div>
 {% endblock %}
