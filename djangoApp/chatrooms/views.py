@@ -14,3 +14,9 @@ def room(request, room_name):
         'username': mark_safe(json.dumps(request.user.username)),
 
     })
+def task(request, room_name,task_name):
+    return render(request, 'task.html', {
+        'room_name': room_name,
+        'username': mark_safe(json.dumps(request.user.username)),
+        'task_name': task_name
+    })

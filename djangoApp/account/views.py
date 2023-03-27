@@ -6,7 +6,8 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 
 # Create your views here.
-
+def home(request):
+    return render(request, 'home.html', {})
 class CustomLoginView(LoginView):
     redirect_authenticated_user = True
 

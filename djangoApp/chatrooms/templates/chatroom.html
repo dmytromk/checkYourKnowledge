@@ -10,7 +10,6 @@
     <input id="chat-message-input" type="text" size="100"><br>
     <input id="chat-message-submit" type="button" value="Send"><br>
     <input id="createTask" type="button" value="create Task"><br>
-
     <script>
          var roomName = '{{room_name}}';
          var username = {{username}};
@@ -30,7 +29,8 @@
         chatSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);
           var message = data['message'];
-        document.querySelector('#chat-log').value += (username + ':' + message + '\n');
+          var author = data['from'];
+        document.querySelector('#chat-log').value += (author + ':' + message + '\n');
 
         };
 
@@ -57,13 +57,11 @@
             }));
             messageInputDom.value = '';
         };
-         document.querySelector('createTask').onclick = function(e) {
+         document.querySelector('#createTask').onclick = function(e) {
             const messageInputDom = document.querySelector('#chat-message-input');
             
 
-            chatSocket.send(JSON.stringify({
-                'command' : 'createTask',
-            }));
+
             window.location.pathname = '/chat/' + roomName + '/' + 'task_1/';
         };
     </script>
