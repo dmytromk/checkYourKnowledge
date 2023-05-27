@@ -55,8 +55,11 @@ class NewTaskCommand(Command):
 
     async def execute(self):
         author = self.data['from']
+        answear = self.data['answear']
+        print(answear)
+        content = self.data['content']
         user = User.objects.get(username=author)
-        task = Task()
+        task = Task(content,answear)
         task_model = Task_model.objects.create(author=user, content_problem=task.task, content_answear=task.answear)
         content = {
             'command': 'new_task',
@@ -71,10 +74,11 @@ class CheckAnswearCommand(Command):
         self.data = data
 
     async def execute(self):
+        print(self.data)
         answear_user = self.data['message']
         correct_answear = self.data['answear']
         author = self.data['from']
-
+        print('correct_answear' + correct_answear)
         if str(answear_user) == str(correct_answear):
             await self.consumer.send(text_data=json.dumps({
                 'message': answear_user,
@@ -114,6 +118,7 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
         for message in messages:
             result.append(self.message_to_json(message))
         return result
+
     def message_to_json(self, message : json):
 
         return {
@@ -196,6 +201,14 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
                 'from': author,
             }
         )
+
+    async def chatroom_message(self, event):
+        message = event['message']
+        author = event['from']
+        await self.send(text_data=json.dumps({
+            'message': message,
+            'from': author
+        }))
     async def send_task(self,event):
         message_problem = event['content_problem']
         message_answear = event['content_answear']

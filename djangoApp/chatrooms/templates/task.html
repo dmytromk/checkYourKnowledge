@@ -9,9 +9,14 @@
 <textarea id="problem" cols="100" rows="20"></textarea><br>
  <input id="answear-input" type="text" size="100"><br>
  <input id="answear-input-submit" type="button" value="Send"><br>
+  <input id="task-content" type="text" size="100"><br>
+  <input id="answear-content" class = "answear-content" type="text" size="100"><br>
+<input id="task-input-submit" type="button" value="Submit"><br>
     <script>
          window.userName = {{username}};
          window.roomName = '{{room_name}}';
+         window.answear =   document.querySelector("#answear-content").value;
+         window.problem =   document.querySelector("#task-content").value;
     </script>
   <script  src="{% static 'task.js' %}"></script>
 </body>

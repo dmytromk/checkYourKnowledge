@@ -1,6 +1,6 @@
     var roomName = window.roomName;
-     var username =  window.userName;
-      var answear = 4;
+    var username =  window.userName;
+    var answear;
         const chatSocket = new WebSocket(
             'ws://'
             + window.location.host
@@ -8,12 +8,22 @@
             + roomName
             + '/' + 'task_1/'
             );
-             chatSocket.onopen = function(e){
-            sendTask();
+           chatSocket.onopen = function(e){
+           var answear = window.answear;
+           var content =  window.problem;
+
         };
-      function sendTask() {
+          document.querySelector('#task-input-submit').onclick = function(e) {
+           const ans = document.querySelector("#answear-content").value;
+           const content = document.querySelector("#task-content").value;
+            answear = ans;
+            sendTask(ans,content);
+            };
+      function sendTask(ans,content) {
       chatSocket.send(JSON.stringify({'command': 'new_task',
-                                      'from' : username}));
+                                      'from' : username,
+                                      'content' : content,
+                                      'answear' : ans}));
     };
             chatSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);
@@ -32,7 +42,7 @@
             }
             if(type == 'problem'){
            var message = data['message_problem'];
-            document.querySelector('#problem').value += (author + ':' + message + '\n');
+           document.querySelector('#problem').value += (author + ':' + message + '\n');
           }
           answear = data['message_answear'];
 
@@ -52,7 +62,7 @@
                 'command' : 'check_answear',
                 'message': message,
                 'from' : username,
-                'answear': 4
+                'answear': answear
 
             }));
 
