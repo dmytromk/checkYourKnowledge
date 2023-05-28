@@ -29,16 +29,16 @@ class ChangePasswordForm(PasswordChangeForm):
         return user
 
 class ChangeEmailForm(forms.ModelForm):
-    email = forms.EmailField(required=True)
-    password = forms.CharField(widget=forms.PasswordInput)
+    email = forms.EmailField(label='New Email', required=True)
+    password = forms.CharField(label='Confirm Password', widget=forms.PasswordInput)
 
     class Meta:
         model = User
         fields = ['email', 'password']
 
 class ChangeUsernameForm(forms.ModelForm):
-    username = forms.CharField(max_length=150, required=True)
-    password = forms.CharField(widget=forms.PasswordInput)
+    username = forms.CharField(label='New Username', max_length=150, required=True)
+    password = forms.CharField(label='Confirm Password', widget=forms.PasswordInput)
 
     class Meta:
         model = User
