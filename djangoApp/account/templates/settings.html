@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Profile details{% endblock %}
+{% block content %}
+
+    <div class="account_data">
+        <h1>Your account</h1>
+        {% if request.user.is_authenticated %}
+        <p>{{ request.user.username }}</p>
+        <p>{{ request.user.firstname }}</p>
+        <p>{{ request.user.last_name }}</p>
+        <p>{{ request.user.email }}</p>
+        <button onclick="window.location.href='/account/change_email'">Change Email</button>
+        <button onclick="window.location.href='/account/change_password'">Change Password</button>
+        <button onclick="window.location.href='/account/change_username'">Change Username</button>
+        {% endif %}
+    </div>
+{% endblock %}
