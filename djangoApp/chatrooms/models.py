@@ -15,4 +15,4 @@ class Task_model(models.Model):
     content_problem = models.TextField()
     content_answear = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
-    Id = models.TextField()
+    content_id = models.TextField()

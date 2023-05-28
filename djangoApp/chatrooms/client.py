@@ -63,7 +63,7 @@ class NewTaskCommand(Command):
         task = Task(content, answear, id)
         print(id)
         self.consumer.addTaskToListOfTasks(task)
-        task_model = Task_model.objects.create(author=user, content_problem=task.task, content_answear=task.answear, Id=task.id)
+        task_model = Task_model.objects.create(author=user, content_problem=task.task, content_answear=task.answear, content_id=task.id)
         content = {
             'command': 'new_task',
             'task': self.consumer.task_to_json(task_model)
@@ -174,7 +174,7 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
             'content_problem': task.content_problem,
             'content_answear': task.content_answear,
             'timestamp': str(task.timestamp),
-            'id': task.Id
+            'id': task.content_id
         }
     async def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
