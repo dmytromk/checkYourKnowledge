@@ -1,0 +1,25 @@
+{%load static%}
+{% block content %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<textarea id="problem" cols="100" rows="20"></textarea><br>
+ <input id="answear-input" type="text" size="100"><br>
+ <input id="answear-input-submit" type="button" value="Send"><br>
+  <input id="task-content" type="text" size="100"><br>
+  <input id="answear-content" class = "answear-content" type="text" size="100"><br>
+<input id="task-input-submit" type="button" value="Submit"><br>
+<div id = "content"></div>
+    <script>
+         window.userName = {{username}};
+         window.roomName = '{{room_name}}';
+         window.answear =   document.querySelector("#answear-content").value;
+         window.problem =   document.querySelector("#task-content").value;
+    </script>
+  <script  src="{% static 'createtask.js' %}"></script>
+</body>
+</html>
+{% endblock %}
