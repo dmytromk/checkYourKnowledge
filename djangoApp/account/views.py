@@ -7,7 +7,6 @@ from django.contrib import messages
 from django.contrib.auth import authenticate
 
 
-# Create your views here.
 def home(request):
     return render(request, 'home.html', {})
 
@@ -59,7 +58,7 @@ def change_email(request):
             if user is not None:
                 user.email = email
                 user.save()
-                return redirect('/settings')  # Replace with the desired URL or path
+                return redirect('/settings')
             else:
                 form.add_error('password', 'Invalid password.')
     else:
@@ -77,15 +76,9 @@ def change_username(request):
             if user is not None:
                 user.username = new_username
                 user.save()
-                return redirect('/settings')  # Replace with the desired URL or path
+                return redirect('/settings')
             else:
                 form.add_error('password', 'Invalid password.')
     else:
         form = ChangeUsernameForm(instance=request.user)
     return render(request, 'change_username.html', {'form': form})
-
-
-
-#@login_required
-#def dashboard(request):
-#    return render(request, 'dashboard.html', {'section': 'dashboard'})
