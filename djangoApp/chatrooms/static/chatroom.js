@@ -46,5 +46,6 @@
         };
          document.querySelector('#createTask').onclick = function(e) {
             const messageInputDom = document.querySelector('#chat-message-input');
-            window.location.pathname = '/chat/' + roomName + '/' + 'task_1/';
+
+            window.location.pathname = '/chat/' + roomName + '/' + 'createtask/';
         };

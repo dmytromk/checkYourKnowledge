@@ -1,13 +1,15 @@
 class Task:
-    task = None
-    answear = None
+    task : str = None
+    answear : str = None
     timestamp = None
-    points = None
+    points : int = None
+    id : int = None
 
-    def __init__(self):
-        self.task = "2 + 2"
-        self.answear = 4
+    def __init__(self,task : str, answear : str,id_ : int):
+        self.task = task
+        self.answear = answear
         points = 2
+        self.id = id_
 
 
 

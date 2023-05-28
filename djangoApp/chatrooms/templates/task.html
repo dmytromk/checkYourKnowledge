@@ -1,18 +1,48 @@
-{%load static%}
+{% block content %}
 
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+  <title>Simple HTML Page</title>
+  <style>
+    .block {
+      background-color: #f2f2f2;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+  </style>
 </head>
 <body>
-<textarea id="problem" cols="100" rows="20"></textarea><br>
- <input id="answear-input" type="text" size="100"><br>
- <input id="answear-input-submit" type="button" value="Send"><br>
-    <script>
-         window.userName = {{username}};
-         window.roomName = '{{room_name}}';
-    </script>
-  <script  src="{% static 'task.js' %}"></script>
+  <div class="block">
+    <h2>Content Block</h2>
+    <p>This is some content in the block.</p>
+  </div>
+
+  <input type="text" id="answerInput" placeholder="Enter your answer">
+
+  <button onclick="submitAnswer()">Submit Answer</button>
+
+  <div id="resultDiv"></div>
+
+  <script>
+    function submitAnswer() {
+      var answerInput = document.getElementById('answerInput');
+      var resultDiv = document.getElementById('resultDiv');
+
+      var userAnswer = answerInput.value;
+
+      // Process the user's answer and display the result in the div
+      if (userAnswer === 'OpenAI') {
+        resultDiv.textContent = 'Correct answer!';
+        resultDiv.style.color = 'green';
+      } else {
+        resultDiv.textContent = 'Incorrect answer. Please try again.';
+        resultDiv.style.color = 'red';
+      }
+
+      // Clear the input field
+      answerInput.value = '';
+    }
+  </script>
 </body>
 </html>
+{% endblock %}
