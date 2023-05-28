@@ -62,7 +62,7 @@ def change_email(request):
             if user is not None:
                 user.email = email
                 user.save()
-                return redirect('/settings')  # Replace with the desired URL or path
+                return redirect('/settings')
             else:
                 form.add_error('password', 'Invalid password.')
     else:
@@ -80,7 +80,7 @@ def change_username(request):
             if user is not None:
                 user.username = new_username
                 user.save()
-                return redirect('/settings')  # Replace with the desired URL or path
+                return redirect('/settings')
             else:
                 form.add_error('password', 'Invalid password.')
     else:
