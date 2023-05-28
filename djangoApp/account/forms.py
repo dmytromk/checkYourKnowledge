@@ -48,6 +48,7 @@ class ChangePasswordForm(PasswordChangeForm):
             user.save()
         return user
 
+
 class ChangeEmailForm(forms.ModelForm, BaseCleanedEmailClass):
     email = forms.EmailField(label='New Email', required=True)
     password = forms.CharField(label='Confirm Password', widget=forms.PasswordInput)
@@ -55,6 +56,7 @@ class ChangeEmailForm(forms.ModelForm, BaseCleanedEmailClass):
     class Meta:
         model = User
         fields = ['email', 'password']
+
 class ChangeUsernameForm(forms.ModelForm, BaseCleanedUsernameClass):
     username = forms.CharField(label='New Username', max_length=150, required=True)
     password = forms.CharField(label='Confirm Password', widget=forms.PasswordInput)

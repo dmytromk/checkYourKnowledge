@@ -17,14 +17,12 @@ def settings(request):
 class CustomLoginView(LoginView):
     redirect_authenticated_user = True
 
-
 @login_required
 def settings(request):
     user = request.user
     # if we make CustomProfile model that extends the built-in django User model then use this instead
     # profile = CustomProfile.objects.get(user=user)
     return render(request, 'settings.html', {'profile': user})
-
 
 def register(request):
     if request.method == 'POST':
