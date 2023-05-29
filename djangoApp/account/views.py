@@ -45,7 +45,7 @@ def change_password(request):
         form = ChangePasswordForm(user = request.user, data = request.POST)
         if form.is_valid():
             form.save()
-            return redirect('/settings')
+            return redirect('/account/settings')
     else:
         form = ChangePasswordForm(user = request.user)
     return render(request, 'change_password.html', {'form' : form})
@@ -62,7 +62,7 @@ def change_email(request):
             if user is not None:
                 user.email = email
                 user.save()
-                return redirect('/settings')
+                return redirect('/account/settings')
             else:
                 form.add_error('password', 'Invalid password.')
     else:
@@ -80,14 +80,12 @@ def change_username(request):
             if user is not None:
                 user.username = new_username
                 user.save()
-                return redirect('/settings')
+                return redirect('/account/settings')
             else:
                 form.add_error('password', 'Invalid password.')
     else:
         form = ChangeUsernameForm(instance=request.user)
     return render(request, 'change_username.html', {'form': form})
-
-
 
 @login_required
 def change_password(request):
