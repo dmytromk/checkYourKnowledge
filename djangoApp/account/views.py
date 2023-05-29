@@ -34,10 +34,6 @@ def register(request):
         user_form = RegistrationForm()
     return render(request, 'registration.html', {'user_form': user_form})
 
-# @login_required()
-# def return_data(request):
-#     user = get_user_model()
-#     return render(request, 'settings.html', {})
 
 @login_required
 def change_password(request):
@@ -50,35 +46,27 @@ def change_password(request):
         form = ChangePasswordForm(user = request.user)
     return render(request, 'change_password.html', {'form' : form})
 
-
 @login_required
 def change_email(request):
-    if request.method == 'POST':
-        form = ChangeEmailForm(request.POST, instance=request.user)
-        if form.is_valid():
-            email = form.cleaned_data['email']
-            password = form.cleaned_data['password']
-            user = authenticate(username=request.user.username, password=password)
-            if user is not None:
-                user.email = email
-                user.save()
-                return redirect('/account/settings')
-            else:
-                form.add_error('password', 'Invalid password.')
-    else:
-        form = ChangeEmailForm(instance=request.user)
-    return render(request, 'change_email.html', {'form': form})
+    return change_param(request, ChangeEmailForm, 'change_email.html', 'email')
 
 @login_required
 def change_username(request):
+    return change_param(request,ChangeUsernameForm,'change_username.html','username')
+
+class CustomPasswordResetView(PasswordResetView):
+    form_class = PasswordResetForm
+    template_name = 'password_reset.html'
+
+def change_param(request,change_function,template_file,attribute):
     if request.method == 'POST':
-        form = ChangeUsernameForm(request.POST)
+        form = change_function(request.POST)
         if form.is_valid():
-            new_username = form.cleaned_data['username']
+            new_attribute_value = form.cleaned_data[attribute]
             password = form.cleaned_data['password']
             user = authenticate(username=request.user.username, password=password)
             if user is not None:
-                user.username = new_username
+                setattr(user,attribute,new_attribute_value)
                 user.save()
                 return redirect('/account/settings')
             else:

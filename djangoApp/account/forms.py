@@ -3,8 +3,21 @@ from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm, User
     PasswordResetForm as DjangoPasswordResetForm
 from django.contrib.auth.models import User
 
+class BaseCleanedEmailClass:
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError("Email already exists.")
+        return email
 
-class RegistrationForm(UserCreationForm):
+class BaseCleanedUsernameClass:
+    def clean_username(self):
+        username = self.cleaned_data['username']
+        if User.objects.filter(username=username).exists():
+            raise forms.ValidationError("Username already exists.")
+        return username
+
+class RegistrationForm(UserCreationForm,BaseCleanedEmailClass,BaseCleanedUsernameClass):
     email = forms.EmailField(required=True)
 
 class BaseCleanedEmailClass:
@@ -48,7 +61,6 @@ class ChangePasswordForm(PasswordChangeForm):
             user.save()
         return user
 
-
 class ChangeEmailForm(forms.ModelForm, BaseCleanedEmailClass):
     email = forms.EmailField(label='New Email', required=True)
     password = forms.CharField(label='Confirm Password', widget=forms.PasswordInput)
@@ -73,7 +85,6 @@ class ChangeRealnameForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'password']
-
 
 class PasswordResetForm(DjangoPasswordResetForm):
     email = forms.EmailField(label='Your Email', required=True)
