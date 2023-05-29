@@ -11,8 +11,11 @@ class Message(models.Model):
         return Message.objects.order_by('-timestamp').all()[:10]
 
 class Task_model(models.Model):
-    author = models.ForeignKey(User,  on_delete=models.CASCADE)
+    author = models.ForeignKey(User, related_name='tasks',  on_delete=models.CASCADE)
     content_problem = models.TextField()
     content_answear = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
-    content_id = models.TextField()
+    content_id = models.IntegerField()
+
+    def last_10_tasks():
+        return Task_model.objects.order_by('-timestamp').all()[:10]

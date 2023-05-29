@@ -26,6 +26,26 @@ class FetchCommand(Command):
         }
         for message in content['messages']:
              self.consumer.send_message(message)
+class GetTask(Command):
+    def __init__(self, consumer, data):
+        self.consumer = consumer
+        self.data = data
+
+    async def execute(self):
+
+        id = self.data['id']
+        tasks = Task_model.objects.all().filter(content_id=id)
+        l : list[json]
+        l = []
+        for task in tasks:
+            l.append({
+            'author': task.author.username,
+            'content_problem': task.content_problem,
+            'content_answear': task.content_answear,
+            'id': task.content_id,
+            'timestamp': str(task.timestamp)
+        })
+        await self.consumer.sendTask({ 'task' : l[0]})
 
 class NewMessageCommand(Command):
     def __init__(self, consumer, data):
@@ -54,7 +74,7 @@ class NewTaskCommand(Command):
         self.data = data
 
     async def execute(self):
-        author = self.data['from']
+        author = self.data['author']
         answear = self.data['answear']
         print(answear)
         content = self.data['content']
@@ -80,31 +100,33 @@ class CheckAnswearCommand(Command):
         print(self.data)
         answear_user = self.data['message']
         correct_answear = self.data['answear']
-        author = self.data['from']
+        author = self.data['author']
 
         print('correct_answear' + correct_answear)
         if str(answear_user) == str(correct_answear):
             await self.consumer.send(text_data=json.dumps({
                 'message': answear_user,
-                'from': author,
+                'author': author,
                 'type': 'correct_answear'
             }))
         else:
             await self.consumer.send(text_data=json.dumps({
                 'message': answear_user,
-                'from': author,
+                'author': author,
                 'type': 'incorrect_answear'
             }))
 
 
 class ChatRoomConsumer(AsyncWebsocketConsumer):
     def __init__(self, *args, **kwargs):
+        print('init')
         super().__init__(*args, **kwargs)
         self.commands = {
             'fetch': FetchCommand,
             'new_message': NewMessageCommand,
             'new_task': NewTaskCommand,
             'check_answear': CheckAnswearCommand,
+             'get_task' : GetTask
         }
         self.listOfTasks = []
     def addTaskToListOfTasks(self,t : Task):
@@ -118,6 +140,9 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
             if max > i.id:
                 max = i.id
         return max+1;
+
+    def getListOfTasks(self):
+        return self.listOfTasks
 
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
@@ -150,8 +175,8 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
         task_content = Message_dict['content_problem']
         task_answear = Message_dict['content_answear']
         id = Message_dict['id']
-        print('Id:'+str(id))
-        author = Message_dict['from']
+        print('Id:'+str(task_content))
+        author = Message_dict['author']
         print('Hello')
         await (self.channel_layer.group_send)(
             self.room_group_name,
@@ -159,7 +184,7 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
                 'type': 'send_task',
                 'content_problem': task_content,
                 'content_answear': task_answear,
-                'from': author,
+                'author': author,
                 'id': id,
             }
         )
@@ -169,8 +194,9 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
             result.append(self.task_to_json(task))
         return result
     def task_to_json(self, task : Task_model):
+
         return {
-            'from': task.author.username,
+            'author': task.author.username,
             'content_problem': task.content_problem,
             'content_answear': task.content_answear,
             'timestamp': str(task.timestamp),
@@ -221,7 +247,25 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
                 'from': author,
             }
         )
+    async def send_Task_model(self, task : Task_model):
+        print('send_chat_message')
 
+        task_content = task['content_problem']
+        task_answear = task['content_answear']
+        author = task['author']
+        id = task['id']
+
+        print('Hello')
+        await (self.channel_layer.group_send)(
+            self.room_group_name,
+            {
+                'type': 'send_task',
+                'content_problem': task_content,
+                'content_answear': task_answear,
+                'author': author,
+                'id': id,
+            }
+        )
     async def chatroom_message(self, event):
         message = event['message']
         author = event['from']
@@ -233,11 +277,11 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
         message_problem = event['content_problem']
         message_answear = event['content_answear']
         id = event['id']
-        author = event['from']
+        author = event['author']
         await self.send(text_data=json.dumps({
             'message_problem': message_problem,
             'answear':message_answear,
-            'from': author,
+            'author': author,
             'type': 'problem',
             'id': id,
         }))
