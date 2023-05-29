@@ -3,8 +3,21 @@ from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm, User
 
 from django.contrib.auth.models import User
 
+class BaseCleanedEmailClass:
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError("Email already exists.")
+        return email
 
-class RegistrationForm(UserCreationForm):
+class BaseCleanedUsernameClass:
+    def clean_username(self):
+        username = self.cleaned_data['username']
+        if User.objects.filter(username=username).exists():
+            raise forms.ValidationError("Username already exists.")
+        return username
+
+class RegistrationForm(UserCreationForm,BaseCleanedEmailClass,BaseCleanedUsernameClass):
     email = forms.EmailField(required=True)
     model = User
     class Meta:
@@ -29,7 +42,7 @@ class ChangePasswordForm(PasswordChangeForm):
             user.save()
         return user
 
-class ChangeEmailForm(forms.ModelForm):
+class ChangeEmailForm(forms.ModelForm,BaseCleanedEmailClass):
     email = forms.EmailField(label='New Email', required=True)
     password = forms.CharField(label='Confirm Password', widget=forms.PasswordInput)
 
@@ -37,7 +50,8 @@ class ChangeEmailForm(forms.ModelForm):
         model = User
         fields = ['email', 'password']
 
-class ChangeUsernameForm(forms.ModelForm):
+
+class ChangeUsernameForm(forms.ModelForm,BaseCleanedUsernameClass):
     username = forms.CharField(label='New Username', max_length=150, required=True)
     password = forms.CharField(label='Confirm Password', widget=forms.PasswordInput)
 
@@ -45,11 +59,13 @@ class ChangeUsernameForm(forms.ModelForm):
         model = User
         fields = ['username', 'password']
 
+
 class PasswordResetForm(DjangoPasswordResetForm):
-    email = forms.EmailField(label='New Email', required=True)
+    email = forms.EmailField(label='Your Email', required=True)
 
     def clean_email(self):
         email = self.cleaned_data['email']
         if not User.objects.filter(email=email).exists():
             raise forms.ValidationError("Email does not exist.")
         return email
+
