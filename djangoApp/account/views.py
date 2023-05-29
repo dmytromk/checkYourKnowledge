@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView, PasswordChangeView
-from .forms import RegistrationForm, ChangePasswordForm, ChangeEmailForm, ChangeUsernameForm
+from .forms import RegistrationForm, ChangePasswordForm, ChangeEmailForm, ChangeUsernameForm, PasswordResetForm
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.contrib.auth import authenticate
@@ -41,7 +41,7 @@ def change_password(request):
         form = ChangePasswordForm(user = request.user, data = request.POST)
         if form.is_valid():
             form.save()
-            return redirect('/settings')
+            return redirect('/account/settings')
     else:
         form = ChangePasswordForm(user = request.user)
     return render(request, 'change_password.html', {'form' : form})
@@ -58,7 +58,7 @@ def change_email(request):
             if user is not None:
                 user.email = email
                 user.save()
-                return redirect('/settings')
+                return redirect('/account/settings')
             else:
                 form.add_error('password', 'Invalid password.')
     else:
@@ -76,9 +76,13 @@ def change_username(request):
             if user is not None:
                 user.username = new_username
                 user.save()
-                return redirect('/settings')
+                return redirect('/account/settings')
             else:
                 form.add_error('password', 'Invalid password.')
     else:
         form = ChangeUsernameForm(instance=request.user)
     return render(request, 'change_username.html', {'form': form})
+
+class CustomPasswordResetView(PasswordResetView):
+    form_class = PasswordResetForm
+    template_name = 'password_reset.html'

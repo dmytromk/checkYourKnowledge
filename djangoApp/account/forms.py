@@ -1,5 +1,6 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm, UserChangeForm
+from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm, UserChangeForm, PasswordResetForm as DjangoPasswordResetForm
+
 from django.contrib.auth.models import User
 
 
@@ -43,3 +44,12 @@ class ChangeUsernameForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['username', 'password']
+
+class PasswordResetForm(DjangoPasswordResetForm):
+    email = forms.EmailField(label='New Email', required=True)
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if not User.objects.filter(email=email).exists():
+            raise forms.ValidationError("Email does not exist.")
+        return email
