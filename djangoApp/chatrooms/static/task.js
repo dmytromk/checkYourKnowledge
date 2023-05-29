@@ -5,7 +5,7 @@ const chatSocket = new WebSocket(
             'ws://'
             + window.location.host
             + '/ws/chat/'
-            + 'new'
+            +  window.roomName
             + '/' + id
         );
     chatSocket.onopen = function(e){
@@ -16,14 +16,15 @@ const chatSocket = new WebSocket(
      function getTask() {
       console.log('Hello');
      chatSocket.send(JSON.stringify({'command': 'get_task',
-                                     'id': id}));
+                                     'id': id,
+                                      'classroom_name': window.roomName}));
     };
      chatSocket.onmessage = function(e) {
         console.log('On message');
          const data = JSON.parse(e.data);
          console.log(data);
          var problem = data['message_problem'];
-        ans = data['answear']
+        ans = data['answer']
          console.log(problem);
          document.querySelector('#problem').innerText = problem;
 
