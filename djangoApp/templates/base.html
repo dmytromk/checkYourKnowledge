@@ -99,7 +99,7 @@
 <div id="header">
     <span class="header">
         {% if request.user.is_authenticated %}
-            Hello, {{ request.user.username }}!
+            Hello, {{ request.user.first_name }}!
             <a href="{% url 'settings' %}">Profile settings</a>
             <a href="{% url 'logout' %}">Logout</a>
         {% else %}
