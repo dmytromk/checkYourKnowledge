@@ -26,13 +26,14 @@
            const data = JSON.parse(e.data);
            const id = data['id'];
            const message = data['message_problem'];
+           const name_of_tasks = data['task_name'];
            div.className = 'customProblem';
-           div.innerHTML = message;
+           div.innerHTML = name_of_tasks;
            div.style.backgroundColor = '#3498db';
            div.style.padding = '10px 20px';
            div.style.color = '#fff';
            div.style.cursor = 'pointer';
-
+           div.style.margin = '10px 0px 0px 0px';
            div.addEventListener('click', function() {
 
             window.location.pathname = '/chat/' + roomName + '/' + id + '/';

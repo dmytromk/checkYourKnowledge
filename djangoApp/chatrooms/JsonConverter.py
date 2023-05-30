@@ -28,7 +28,8 @@ class TaskToJsonConverter(ObjectToJsonConverter):
             'timestamp': str(task.timestamp),
             'id': task.content_id,
             'classroom_name': task.classroom_name,
-            'points': task.points
+            'points': task.points,
+            'task_name': task.task_name
         }
 
     def convert_multiple(self, tasks: list[json]):

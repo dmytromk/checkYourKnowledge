@@ -28,12 +28,14 @@
         console.log('sendTask');
         console.log(window.userName);
        const points = document.querySelector('#task-points').value;
+       const task_name =  document.querySelector('#task-name').value;
       chatSocket.send(JSON.stringify({'command': 'new_task',
                                       'author' : username,
                                       'content' : content,
                                       'answer' : ans,
                                       'classroom_name': roomName,
-                                      'points': points}));
+                                      'points': points,
+                                      'task_name': task_name}));
      showSuccessMessage();
     };
    chatSocket.onmessage = function(e) {
