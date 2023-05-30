@@ -1,5 +1,5 @@
 {% block content %}
-{%load static%}
+{% load static %}
 
 <html>
 <head>
@@ -18,16 +18,43 @@
     <p id="problem">This is some content in the block.</p>
   </div>
 
-  <input type="text" id="answerInput" placeholder="Enter your answer">
+  <input type="file" id="photoInput" accept="image/*">
 
   <button onclick="submitAnswer()">Submit Answer</button>
 
   <div id="resultDiv"></div>
 
   <script>
-   window.roomName = '{{room_name}}';
+    window.roomName = '{{ room_name }}';
+
+    function submitAnswer() {
+      var photoInput = document.getElementById('photoInput');
+      var file = photoInput.files[0];
+
+      if (file) {
+        // You can perform additional validation or processing here before uploading the photo
+        uploadPhoto(file);
+      } else {
+        alert('Please select a photo to upload.');
+      }
+    }
+
+    function uploadPhoto(file) {
+      // Here, you can write the code to handle the photo upload,
+      // such as sending it to a server using AJAX or performing client-side processing.
+      // For demonstration purposes, let's just display the photo on the page.
+
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        var resultDiv = document.getElementById('resultDiv');
+        var img = document.createElement('img');
+        img.src = e.target.result;
+        resultDiv.appendChild(img);
+      };
+      reader.readAsDataURL(file);
+    }
   </script>
- <script  src="{% static 'task.js' %}"></script>
+  <script src="{% static 'task.js' %}"></script>
 </body>
 </html>
 {% endblock %}
