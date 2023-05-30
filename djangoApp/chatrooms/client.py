@@ -1,17 +1,19 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
 from django.contrib.auth import get_user_model
-from asgiref.sync import async_to_sync
 from .models import Message,Task_model
 from datetime import datetime
 from .Task import Task
+
 User = get_user_model()
 import json
 from abc import ABC, abstractmethod
+from . import JsonConverter
 
 class Command(ABC):
     @abstractmethod
     async def execute(self):
         pass
+
 
 class FetchCommand(Command):
     def __init__(self, consumer, data):
@@ -20,12 +22,55 @@ class FetchCommand(Command):
 
     async def execute(self):
         messages = Message.last_10_messages()
+        jsonConverter = JsonConverter.JsonConverterContext(JsonConverter.MessageToJsonConverter())
         content = {
             'command': 'messages',
-            'messages': self.consumer.messages_to_json(messages)
+            'messages': jsonConverter.convert_multiple(messages)
         }
         for message in content['messages']:
              self.consumer.send_message(message)
+class FetchTasks(Command):
+    def __init__(self, consumer, data):
+        self.consumer = consumer
+        self.data = data
+
+    async def execute(self):
+
+        class_room = self.data['room_name']
+        tasks = Task_model.last_10_tasks(class_room)
+        print(len(tasks))
+        jsonConverter = JsonConverter.JsonConverterContext(JsonConverter.TaskToJsonConverter())
+
+        content = {
+            'command': 'tasks',
+            'tasks': jsonConverter.convert_multiple(tasks)
+        }
+        for task in content['tasks']:
+            print(task)
+            await self.consumer.sendTask({'task':task})
+
+class GetTask(Command):
+    def __init__(self, consumer, data):
+        self.consumer = consumer
+        self.data = data
+
+    async def execute(self):
+
+        id = self.data['id']
+        classroom = self.data['classroom_name']
+        tasks = Task_model.objects.all().filter(content_id=id,classroom_name = classroom)
+        l : list[json]
+        l = []
+        for task in tasks:
+            l.append({
+            'author': task.author.username,
+            'content_problem': task.content_problem,
+            'content_answer': task.content_answer,
+            'id': task.content_id,
+            'timestamp': str(task.timestamp),
+            'classroom_name': task.classroom_name
+        })
+        await self.consumer.sendTask({ 'task' : l[0]})
 
 class NewMessageCommand(Command):
     def __init__(self, consumer, data):
@@ -34,16 +79,18 @@ class NewMessageCommand(Command):
 
     async def execute(self):
         print('new message')
-        author = self.data['from']
+        author = self.data['author']
         message_ = self.data['message']
         user = User.objects.get(username=author)
         dt = datetime.now()
         ts = datetime.timestamp(dt)
         message = Message.objects.create(author=user, content=message_)
         message.save()
+        jsonConverter = JsonConverter.JsonConverterContext(JsonConverter.MessageToJsonConverter())
+
         content = {
             'command': 'new_message',
-            'message': self.consumer.message_to_json(message)
+            'message': jsonConverter.convert_single(message)
         }
         print(content)
         await self.consumer.send_chat_message(content)
@@ -54,19 +101,28 @@ class NewTaskCommand(Command):
         self.data = data
 
     async def execute(self):
-        author = self.data['from']
-        answear = self.data['answear']
+        author = self.data['author']
+        answear = self.data['answer']
         print(answear)
         content = self.data['content']
+        classroom = self.data['classroom_name']
         user = User.objects.get(username=author)
-        id : int = self.consumer.getUniqueId()
-        task = Task(content, answear, id)
+        tasks = Task_model.last_10_tasks(classroom)
+        print(tasks)
+        if(len(tasks)==0):
+            id = 1
+        else:
+            id = 1 + tasks[len(tasks)-1].content_id
+
+        task = Task(content, answear, id,classroom)
         print(id)
         self.consumer.addTaskToListOfTasks(task)
-        task_model = Task_model.objects.create(author=user, content_problem=task.task, content_answear=task.answear, Id=task.id)
+        task_model = Task_model.objects.create(author=user, content_problem=task.task, content_answer=task.answear, content_id=task.id,classroom_name = classroom)
+        jsonConverter = JsonConverter.JsonConverterContext(JsonConverter.TaskToJsonConverter())
+
         content = {
             'command': 'new_task',
-            'task': self.consumer.task_to_json(task_model)
+            'task': jsonConverter.convert_single(task_model)
         }
         await self.consumer.sendTask(content)
 
@@ -79,45 +135,45 @@ class CheckAnswearCommand(Command):
     async def execute(self):
         print(self.data)
         answear_user = self.data['message']
-        correct_answear = self.data['answear']
-        author = self.data['from']
+        correct_answear = self.data['answer']
+        author = self.data['author']
 
-        print('correct_answear' + correct_answear)
+        print('correct_answer' + correct_answear)
         if str(answear_user) == str(correct_answear):
             await self.consumer.send(text_data=json.dumps({
                 'message': answear_user,
-                'from': author,
-                'type': 'correct_answear'
+                'author': author,
+                'type': 'correct_answer'
             }))
         else:
             await self.consumer.send(text_data=json.dumps({
                 'message': answear_user,
-                'from': author,
-                'type': 'incorrect_answear'
+                'author': author,
+                'type': 'incorrect_answer'
             }))
 
 
 class ChatRoomConsumer(AsyncWebsocketConsumer):
     def __init__(self, *args, **kwargs):
+        print('init')
         super().__init__(*args, **kwargs)
         self.commands = {
             'fetch': FetchCommand,
             'new_message': NewMessageCommand,
             'new_task': NewTaskCommand,
-            'check_answear': CheckAnswearCommand,
+            'check_answer': CheckAnswearCommand,
+             'get_task' : GetTask,
+            'fetch_task': FetchTasks
         }
         self.listOfTasks = []
     def addTaskToListOfTasks(self,t : Task):
         self.listOfTasks.append(t)
 
     def getUniqueId(self):
-        if not self.listOfTasks:
-            return 1;
-        max : int = self.listOfTasks[0].id
-        for i in self.listOfTasks:
-            if max > i.id:
-                max = i.id
-        return max+1;
+        tasks = Task_model.last_10_tasks()
+
+    def getListOfTasks(self):
+        return self.listOfTasks
 
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
@@ -129,53 +185,28 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
             command : Command = command_class(self, command_data)
             await command.execute()
 
-    def messages_to_json(self,messages : list[json]):
-        result = []
-        for message in messages:
-            result.append(self.message_to_json(message))
-        return result
-
-    def message_to_json(self, message : json):
-
-        return {
-            'from': message.author.username,
-            'content': message.content,
-            'timestamp': str(message.timestamp)
-        }
 
     async def sendTask(self, task : json):
         print('poka')
         Message_dict = task['task']
 
         task_content = Message_dict['content_problem']
-        task_answear = Message_dict['content_answear']
+        task_answear = Message_dict['content_answer']
         id = Message_dict['id']
-        print('Id:'+str(id))
-        author = Message_dict['from']
+        print('Id:'+str(task_content))
+        author = Message_dict['author']
         print('Hello')
         await (self.channel_layer.group_send)(
             self.room_group_name,
             {
                 'type': 'send_task',
                 'content_problem': task_content,
-                'content_answear': task_answear,
-                'from': author,
+                'content_answer': task_answear,
+                'author': author,
                 'id': id,
             }
         )
-    def tasks_to_json(self,tasks : list[Task_model]):
-        result = []
-        for task in tasks:
-            result.append(self.task_to_json(task))
-        return result
-    def task_to_json(self, task : Task_model):
-        return {
-            'from': task.author.username,
-            'content_problem': task.content_problem,
-            'content_answear': task.content_answear,
-            'timestamp': str(task.timestamp),
-            'id': task.Id
-        }
+
     async def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = 'chat_%s' % self.room_name
@@ -196,14 +227,14 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
     async def send_message(self, text_data : json):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
-        author = text_data_json['from']
+        author = text_data_json['author']
 
         await (self.channel_layer.group_send)(
             self.room_group_name,
             {
                 'type': 'chatroom_message',
                 'message': message,
-                'from' : author
+                'author' : author
             }
         )
 
@@ -212,41 +243,54 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
         Message_dict = message['message']
 
         message_content = Message_dict['content']
-        author = Message_dict['from']
+        author = Message_dict['author']
         await(self.channel_layer.group_send)(
             self.room_group_name,
             {
                 'type': 'chat_message',
                 'content': message_content,
-                'from': author,
+                'author': author,
+            }
+        )
+    async def send_Task_model(self, task : Task_model):
+        print('send_chat_message')
+
+        task_content = task['content_problem']
+        task_answear = task['content_answer']
+        author = task['author']
+        id = task['id']
+
+        print('Hello')
+        await (self.channel_layer.group_send)(
+            self.room_group_name,
+            {
+                'type': 'send_task',
+                'content_problem': task_content,
+                'content_answer': task_answear,
+                'author': author,
+                'id': id,
             }
         )
 
-    async def chatroom_message(self, event):
-        message = event['message']
-        author = event['from']
-        await self.send(text_data=json.dumps({
-            'message': message,
-            'from': author
-        }))
     async def send_task(self,event):
+        print('send_task')
         message_problem = event['content_problem']
-        message_answear = event['content_answear']
+        message_answear = event['content_answer']
         id = event['id']
-        author = event['from']
+        author = event['author']
         await self.send(text_data=json.dumps({
             'message_problem': message_problem,
-            'answear':message_answear,
-            'from': author,
+            'answer':message_answear,
+            'author': author,
             'type': 'problem',
             'id': id,
         }))
     async def chat_message(self, event):
         message = event['content']
-        author = event['from']
+        author = event['author']
         await self.send(text_data=json.dumps({
             'message': message,
-            'from': author
+            'author': author
         }))
 
     pass

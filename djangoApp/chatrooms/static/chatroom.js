@@ -12,11 +12,13 @@
         };
        function fetchMessages() {
       chatSocket.send(JSON.stringify({'command': 'fetch'}));
+       console.log('Hello');
     };
         chatSocket.onmessage = function(e) {
+        console.log('On message');
             const data = JSON.parse(e.data);
           var message = data['message'];
-          var author = data['from'];
+          var author = data['author'];
         document.querySelector('#chat-log').value += (author + ':' + message + '\n');
 
         };
@@ -39,13 +41,13 @@
             chatSocket.send(JSON.stringify({
                 'command' : 'new_message',
                 'message': message,
-                'from' : username
+                'author' : username
 
             }));
             messageInputDom.value = '';
         };
          document.querySelector('#createTask').onclick = function(e) {
             const messageInputDom = document.querySelector('#chat-message-input');
-
+            chatSocket.close();
             window.location.pathname = '/chat/' + roomName + '/' + 'createtask/';
         };

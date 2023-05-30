@@ -1,6 +1,6 @@
     var roomName = window.roomName;
     var username =  window.userName;
-    var answear;
+    var answer;
         const chatSocket = new WebSocket(
             'ws://'
             + window.location.host
@@ -11,36 +11,50 @@
            chatSocket.onopen = function(e){
            var answear = window.answear;
            var content =  window.problem;
-
+            fetchTasks();
+        };
+    function fetchTasks() {
+     console.log('Hello');
+     chatSocket.send(JSON.stringify({'command': 'fetch_task',
+                                    'room_name': roomName}));
+    };
+       chatSocket.onclose = function(e) {
+            console.error('Chat socket closed unexpectedly');
         };
           document.querySelector('#task-input-submit').onclick = function(e) {
            const ans = document.querySelector("#answear-content").value;
            const content = document.querySelector("#task-content").value;
-            answear = ans;
+            answer = ans;
             sendTask(ans,content);
             };
+
       function sendTask(ans,content) {
+
       chatSocket.send(JSON.stringify({'command': 'new_task',
-                                      'from' : username,
+                                      'author' : username,
                                       'content' : content,
-                                      'answear' : ans}));
+                                      'answer' : ans,
+                                      'classroom_name': roomName}));
     };
-            chatSocket.onmessage = function(e) {
+   chatSocket.onmessage = function(e) {
+            console.log('Problem');
             const data = JSON.parse(e.data);
+            console.log('Problem');
             var type = data['type']
-            var author = data['from'];
-            if(type == "correct_answear"){
-            var answear = data['message']
+            var author = data['author'];
+            if(type == "correct_answer"){
+            var answer = data['message']
 
              document.querySelector('#problem').value += (author + ':' + answear + '\n');
              document.querySelector('#problem').value += ('Correct\n');
             }
-            if(type == "incorrect_answear"){
+            if(type == "incorrect_answer"){
             var answear = data['message']
             document.querySelector('#problem').value += (author + ':' + answear + '\n');
              document.querySelector('#problem').value += ('Incorrect\n');
             }
-            if(type == 'problem'){
+          if(type == 'problem'){
+           console.log('Problem');
            var message = data['message_problem'];
            var id = data['id'];
            document.querySelector('#problem').value += (author + ':' + message + '\n');
@@ -60,7 +74,7 @@
            var parentElement = document.getElementById('content');
            parentElement.appendChild(div);
           }
-          answear = data['message_answear'];
+          answer = data['message_answer'];
 
 
         };
@@ -75,10 +89,10 @@
             const messageInputDom = document.querySelector('#answear-input');
             const message = messageInputDom.value;
                  chatSocket.send(JSON.stringify({
-                'command' : 'check_answear',
+                'command' : 'check_answer',
                 'message': message,
                 'from' : username,
-                'answear': answear
+                'answer': answer
 
             }));
 
