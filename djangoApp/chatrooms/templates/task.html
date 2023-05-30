@@ -1,101 +1,124 @@
 {% extends "base.html" %}
 {% block title %}Create Task{% endblock %}
+{% load static %}
 {% block content %}
-    <style>
-        @font-face {
-            font-family: 'CustomFont';
-            src: url('{% static 'fonts/CustomFont.ttf' %}') format('truetype');
-        }
-
-        body {
-            font-family: 'CustomFont', Arial, sans-serif;
-            background-color: #f2f2f2;
-            margin: 0;
-            padding: 20px;
-        }
-
-        .block {
-            background-color: #fff;
-            padding: 20px;
-            margin-bottom: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        h2 {
-            margin-top: 0;
-        }
-
-        #photoInput {
-            margin-bottom: 10px;
-        }
-
-        #answerInput {
-            margin-bottom: 10px;
-            padding: 10px;
-            width: 100%;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-
-        button {
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: #fff;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-
-        #resultDiv {
-            margin-top: 20px;
-        }
-
-        img {
-            max-width: 100%;
-            height: auto;
-            margin-top: 10px;
-        }
-    </style>
-
-    <div class="block">
-        <h2>Content Block</h2>
-    <button onclick="submitAnswer()">Submit Answer</button>
-
-    <div id="resultDiv"></div>
-
-    <script>
-        window.roomName = '{{ room_name }}';
-
-        function submitAnswer() {
-            var photoInput = document.getElementById('photoInput');
-            var file = photoInput.files[0];
-
-            if (file) {
-                // You can perform additional validation or processing here before uploading the photo
-                uploadPhoto(file);
-            } else {
-                alert('Please select a photo to upload.');
+<html>
+    <head>
+        <style>
+            @font-face {
+                font-family: 'CustomFont';
+                src: url('{% static 'fonts/CustomFont.ttf' %}') format('truetype');
             }
-        }
 
-        function uploadPhoto(file) {
-            // Here, you can write the code to handle the photo upload,
-            // such as sending it to a server using AJAX or performing client-side processing.
-            // For demonstration purposes, let's just display the photo on the page.
+            body {
+                font-family: 'CustomFont', Arial, sans-serif;
+                background-color: #f2f2f2;
+                margin: 0;
+                padding: 20px;
+            }
 
-            var reader = new FileReader();
-            reader.onload = function(e) {
-                var resultDiv = document.getElementById('resultDiv');
-                var img = document.createElement('img');
-                img.src = e.target.result;
-                resultDiv.appendChild(img);
-            };
-            reader.readAsDataURL(file);
-        }
-    </script>
-    <script src="{% static 'task.js' %}"></script>
+            .block {
+                background-color: #fff;
+                padding: 20px;
+                margin-bottom: 20px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                text-align: left;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+
+            h2 {
+                margin-top: 0;
+                font-size: 24px;
+            }
+
+            #photoInput {
+                margin-bottom: 10px;
+                display: block;
+                float: left; /* Added */
+            }
+
+            #answerInput {
+                margin-bottom: 10px;
+                padding: 10px;
+                width: 100%;
+                box-sizing: border-box;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                font-size: 14px;
+            }
+
+            button {
+                padding: 10px 20px;
+                background-color: #4CAF50;
+                color: #fff;
+                border: none;
+                cursor: pointer;
+                border-radius: 5px;
+                font-size: 14px;
+                transition: background-color 0.3s ease;
+            }
+
+            button:hover {
+                background-color: #45a049;
+            }
+
+            #resultDiv {
+                margin-top: 20px;
+            }
+
+            #pointsDiv {
+                position: relative; /* Changed to relative positioning */
+                display: inline-block; /* Added */
+                font-size: 18px;
+                color: #555;
+                margin-top: 10px; /* Adjusted margin-top */
+            }
+
+            img {
+                max-width: 100%;
+                height: auto;
+                margin-top: 10px;
+            }
+
+        </style>
+    </head>
+    <body>
+    <div class="block">
+        <h2 id="problem">Content Block</h2>
+        <input type="file" id="photoInput" accept="image/*">
+        <input type="text" id="answerInput" placeholder="Enter your answer">
+        <button onclick="submitAnswer()">Submit Answer</button>
+
+        <div id="resultDiv"></div>
+        <div id="pointsDiv">Points: <span id="points">0</span></div>
+
+        <script>
+            window.roomName = '{{ room_name }}';
+
+            function submitAnswer() {
+                var photoInput = document.getElementById('photoInput');
+                var file = photoInput.files[0];
+                if (file) {
+                    uploadPhoto(file);
+                } else {
+                    alert('Please select a photo to upload.');
+                }
+            }
+
+            function uploadPhoto(file) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var resultDiv = document.getElementById('resultDiv');
+                    var img = document.createElement('img');
+                    img.src = e.target.result;
+                    resultDiv.appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            }
+        </script>
+        <script src="{% static 'task.js' %}"></script>
+    </div>
+</body>
+</html>
 {% endblock %}

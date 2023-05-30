@@ -1,5 +1,6 @@
         var roomName = window.roomName;
         var username =  window.userName;
+
         const chatSocket = new WebSocket(
             'ws://'
             + window.location.host
@@ -8,18 +9,36 @@
             + '/'
         );
         chatSocket.onopen = function(e){
-             fetchMessages();
+             fetchTasks();
         };
        function fetchMessages() {
       chatSocket.send(JSON.stringify({'command': 'fetch'}));
        console.log('Hello');
     };
+  function fetchTasks() {
+     console.log('fetchTasks');
+     chatSocket.send(JSON.stringify({'command': 'fetch_task',
+                                    'room_name': roomName}));
+    };
         chatSocket.onmessage = function(e) {
-        console.log('On message');
-            const data = JSON.parse(e.data);
-          var message = data['message'];
-          var author = data['author'];
-        document.querySelector('#chat-log').value += (author + ':' + message + '\n');
+           console.log('On message');
+           var div = document.createElement('div');
+           const data = JSON.parse(e.data);
+           const id = data['id'];
+           const message = data['message_problem'];
+           div.className = 'customProblem';
+           div.innerHTML = message;
+           div.style.backgroundColor = '#3498db';
+           div.style.padding = '10px 20px';
+           div.style.color = '#fff';
+           div.style.cursor = 'pointer';
+
+           div.addEventListener('click', function() {
+
+            window.location.pathname = '/chat/' + roomName + '/' + id + '/';
+            });
+           var parentElement = document.getElementById('content');
+           parentElement.appendChild(div);
 
         };
 
