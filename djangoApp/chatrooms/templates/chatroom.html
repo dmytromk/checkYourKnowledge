@@ -1,24 +1,68 @@
-<!-- chat/templates/chat/room.html -->
-{%load static%}
+{% load static %}
 {% block content %}
 <html>
 <head>
     <meta charset="utf-8"/>
     <title>ClassRoom</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 20px;
+        }
+
+        #chat-log {
+            width: 100%;
+            height: 300px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            resize: vertical;
+            overflow-y: auto;
+        }
+
+        #chat-message-input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+        }
+
+        #chat-message-submit, #createTask {
+            padding: 10px 20px;
+            margin-top: 10px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        #createTask {
+            background-color: #337ab7;
+        }
+
+        #chat-message-submit:hover, #createTask:hover {
+            background-color: #45a049;
+        }
+
+        #chat-message-submit:active, #createTask:active {
+            background-color: #3e8e41;
+        }
+    </style>
 </head>
 <body>
     <textarea id="chat-log" cols="100" rows="20"></textarea><br>
     <input id="chat-message-input" type="text" size="100"><br>
     <input id="chat-message-submit" type="button" value="Send"><br>
-    <input id="createTask" type="button" value="create Task"><br>
+    <input id="createTask" type="button" value="Create Task"><br>
 
     <script>
          window.userName = {{username}};
          window.roomName = '{{room_name}}';
-
     </script>
 
-    <script  src="{% static 'chatroom.js' %}"></script>
+    <script src="{% static 'chatroom.js' %}"></script>
 </body>
 </html>
 {% endblock %}

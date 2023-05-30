@@ -17,6 +17,7 @@ class Task_model(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     content_id = models.IntegerField()
     classroom_name = models.TextField()
+    points = models.IntegerField()
     def last_10_tasks(class_room : int):
         tasks = Task_model.objects.all().filter(classroom_name=class_room)
         return tasks.order_by('-timestamp').all()[:10]

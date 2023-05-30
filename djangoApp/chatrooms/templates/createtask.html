@@ -1,26 +1,81 @@
-{%load static%}
+{% extends "base.html" %}
+{% block title %}Create Task{% endblock %}
 {% block content %}
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<textarea id="problem" cols="100" rows="20"></textarea><br>
- <input id="answear-input" type="text" size="100"><br>
- <input id="answear-input-submit" type="button" value="Send"><br>
-  <input id="task-content" type="text" size="100"><br>
-  <input id="answear-content" class = "answear-content" type="text" size="100"><br>
-<input id="task-input-submit" type="button" value="Submit"><br>
-<div id = "content"></div>
-    <script>
-         window.userName = {{username}};
-         window.roomName = '{{room_name}}';
-         window.answear =   document.querySelector("#answear-content").value;
-         window.problem =   document.querySelector("#task-content").value;
-    </script>
-  <script  src="{% static 'createtask.js' %}"></script>
-</body>
-</html>
+        .task-form {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f2f2f2;
+            border-radius: 5px;
+            font-family: 'Roboto', Arial, sans-serif;
+        }
+
+        .task-form h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .task-form label {
+            display: block;
+            margin-bottom: 10px;
+            padding-left: 5px; /* Add padding to the left side of the labels */
+            padding-top: 5px;
+        }
+
+        .task-form input[type="text"],
+        .task-form textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            resize: vertical;
+            font-family: 'Roboto', Arial, sans-serif;
+        }
+
+        .task-form input[type="text"]::placeholder,
+        .task-form input[type="number"]::placeholder,
+        .task-form input[type="file"]::placeholder,
+        .task-form textarea::placeholder {
+            font-family: 'Roboto', Arial, sans-serif;
+        }
+
+        .task-form input[type="file"] {
+            margin-top: 10px;
+        }
+
+        .task-form input[type="submit"] {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+    </style>
+
+    <div class="task-form">
+        <h1>Create Task</h1>
+        <form action="." method="POST">
+            {% csrf_token %}
+            <label for="task-name">Task Name</label>
+            <input type="text" id="task-name" name="task_name" placeholder="Enter task name">
+
+            <label for="task-description">Task Description</label>
+            <textarea id="task-description" name="task_description" rows="5" placeholder="Enter task description"></textarea>
+
+            <label for="task-answer">Correct Answer</label>
+            <input type="text" id="task-answer" name="correct_answer" placeholder="Enter correct answer">
+
+            <label for="task-points">Task Points</label>
+            <input type="number" id="task-points" name="task_points" placeholder="Enter task points">
+
+            <label for="task-files">Upload Files</label>
+            <input type="file" id="task-files" name="task_files" accept="image/*, .pdf, .doc, .docx">
+
+            <input type="submit" value="Create Task">
+        </form>
+    </div>
 {% endblock %}

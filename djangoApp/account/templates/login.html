@@ -1,8 +1,62 @@
 {% extends "base.html" %}
 {% block title %}Log-in{% endblock %}
 {% block content %}
-    <div class="center">
+    <style>
+        .center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
 
+        .card {
+            width: 400px;
+            padding: 20px;
+            background-color: #f2f2f2;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .card h2 {
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .card input[type="text"],
+        .card input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+        }
+
+        .card input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        .card p.text-center {
+            font-size: 14px;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .card p.text-center a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+
+        .card p.text-center a:hover {
+            text-decoration: underline;
+        }
+    </style>
+
+    <div class="center">
         <form method="post" class="card" novalidate>
             {% csrf_token %}
             <h2 class="text-center">Log in to your account</h2>
@@ -13,14 +67,11 @@
                     <small>{{ field.errors|striptags }}</small>
                 {% endif %}
             {% endfor %}
-
             <input type="submit" value="Login">
-
             {% if form.errors %}
                 <p>Your username and password didn't match. Please try again.</p>
             {% endif %}
             <hr>
-
             <p class="text-center">Forgot your password? <a href="#">Reset Password</a></p>
             <p class="text-center">Don't have an account yet? <a href="{% url 'registration' %}">Join Now!</a></p>
         </form>

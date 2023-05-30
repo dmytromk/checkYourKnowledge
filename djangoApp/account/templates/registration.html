@@ -1,6 +1,53 @@
 {% extends "base.html" %}
 {% block title %}Registration{% endblock %}
 {% block content %}
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f2f2f2;
+            font-family: Arial, sans-serif;
+        }
+
+        .registration_fields {
+            max-width: 400px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .registration_fields h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .registration_fields input[type="submit"] {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .registration_fields p.text-center {
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .registration_fields p.text-center a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+
+        .registration_fields p.text-center a:hover {
+            text-decoration: underline;
+        }
+    </style>
 
     <div class="registration_fields">
         <h1>Create an account</h1>
