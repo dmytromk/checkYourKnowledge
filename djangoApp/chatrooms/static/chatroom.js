@@ -10,10 +10,11 @@
         );
         chatSocket.onopen = function(e){
              fetchTasks();
+             fetchMessages();
         };
        function fetchMessages() {
       chatSocket.send(JSON.stringify({'command': 'fetch'}));
-       console.log('Hello');
+        console.log('fetchMessages');
     };
   function fetchTasks() {
      console.log('fetchTasks');
@@ -21,9 +22,43 @@
                                     'room_name': roomName}));
     };
         chatSocket.onmessage = function(e) {
+
            console.log('On message');
+            const data = JSON.parse(e.data);
+            console.log(data);
+           if(data['type']==='chat_message'){
+             const message = data['message'];
+             const from = data['author'];
+               const messageElement = document.createElement('div');
+    messageElement.classList.add('message');
+    const chatMessages = document.getElementById('chat-messages');
+    const avatarElement = document.createElement('img');
+    avatarElement.classList.add('message-avatar');
+    avatarElement.src = 'https://images.unsplash.com/photo-1508341591423-4347099e1f19?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8bWVufGVufDB8fDB8fHww&w=1000&q=80'; // Replace with the path to your avatar image
+    messageElement.appendChild(avatarElement);
+
+    const messageContentElement = document.createElement('div');
+    messageContentElement.classList.add('message-content');
+
+    const usernameElement = document.createElement('div');
+    usernameElement.classList.add('message-username');
+    usernameElement.textContent = from; // Replace with the user name
+    messageContentElement.appendChild(usernameElement);
+
+    const messageTextElement = document.createElement('div');
+    messageTextElement.classList.add('message-text');
+    messageTextElement.textContent = message;
+    messageContentElement.appendChild(messageTextElement);
+
+    messageElement.appendChild(messageContentElement);
+
+    chatMessages.appendChild(messageElement);
+    messageInput.value = '';
+
+           }
+           if(data['type']==='create_task'){
            var div = document.createElement('div');
-           const data = JSON.parse(e.data);
+
            const id = data['id'];
            const message = data['message_problem'];
            const name_of_tasks = data['task_name'];
@@ -40,22 +75,22 @@
             });
            var parentElement = document.getElementById('content');
            parentElement.appendChild(div);
-
+        }
         };
 
         chatSocket.onclose = function(e) {
             console.error('Chat socket closed unexpectedly');
         };
 
-        document.querySelector('#chat-message-input').focus();
-        document.querySelector('#chat-message-input').onkeyup = function(e) {
+        document.querySelector('#message-input').focus();
+        document.querySelector('#message-input').onkeyup = function(e) {
             if (e.keyCode === 13) {  // enter, return
-                document.querySelector('#chat-message-submit').click();
+                document.querySelector('#send-button').click();
             }
         };
 
-        document.querySelector('#chat-message-submit').onclick = function(e) {
-            const messageInputDom = document.querySelector('#chat-message-input');
+        document.querySelector('#send-button').onclick = function(e) {
+            const messageInputDom = document.querySelector('#message-input');
             const message = messageInputDom.value;
 
             chatSocket.send(JSON.stringify({

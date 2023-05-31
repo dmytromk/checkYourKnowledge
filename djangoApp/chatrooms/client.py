@@ -23,12 +23,14 @@ class FetchCommand(Command):
     async def execute(self):
         messages = Message.last_10_messages()
         jsonConverter = JsonConverter.JsonConverterContext(JsonConverter.MessageToJsonConverter())
+        print(messages)
         content = {
             'command': 'messages',
             'messages': jsonConverter.convert_multiple(messages)
         }
         for message in content['messages']:
-             self.consumer.send_message(message)
+            print(message)
+            await self.consumer.send_chat_message({'message': message})
 class FetchTasks(Command):
     def __init__(self, consumer, data):
         self.consumer = consumer
@@ -301,10 +303,11 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
         points = event['points']
         author = event['author']
         await self.send(text_data=json.dumps({
+            'type': 'create_task',
             'message_problem': message_problem,
             'answer':message_answear,
             'author': author,
-            'type': 'problem',
+
             'id': id,
             'points': points,
             'task_name': task_name
@@ -313,6 +316,7 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
         message = event['content']
         author = event['author']
         await self.send(text_data=json.dumps({
+            'type': 'chat_message',
             'message': message,
             'author': author
         }))
