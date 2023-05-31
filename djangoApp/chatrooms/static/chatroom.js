@@ -170,7 +170,6 @@ document.querySelector('#createTask').onclick = function(e) {
 };
 
 document.querySelector('#generate-link').onclick = function(e) {
-
     chatSocket.send(JSON.stringify({
         'command' : 'generate_invite',
         'token': roomName

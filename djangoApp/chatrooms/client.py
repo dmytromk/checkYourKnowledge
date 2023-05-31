@@ -4,7 +4,6 @@ from asgiref.sync import async_to_sync
 from datetime import datetime
 from .CommandFactory import *
 User = get_user_model()
-import json
 from .Command import  *
 
 class ChatRoomConsumer(AsyncWebsocketConsumer):
@@ -42,7 +41,7 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
         id = Message_dict['id']
         print('Id:'+str(task_content))
         author = Message_dict['author']
-        print('Hello')
+        print('SUCCESS')
         await (self.channel_layer.group_send)(
             self.room_group_name,
             {
