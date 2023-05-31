@@ -15,18 +15,21 @@ const chatSocket = new WebSocket(
     };
      function getTask() {
       console.log('Hello');
+
      chatSocket.send(JSON.stringify({'command': 'get_task',
                                      'id': id,
-                                      'classroom_name': window.roomName}));
+                                     'classroom_name': window.roomName}));
     };
      chatSocket.onmessage = function(e) {
         console.log('On message');
          const data = JSON.parse(e.data);
          console.log(data);
-         var problem = data['message_problem'];
-        ans = data['answer']
-         console.log(problem);
-         document.querySelector('#problem').innerText = problem;
+        var problem = data['message_problem'];
+        ans = data['answer'];
+        const points = data['points'];
+        console.log(problem);
+        document.querySelector('#problem').innerText = problem;
+          document.querySelector('#points').innerText = points;
 
         };
        function submitAnswer() {
@@ -44,4 +47,5 @@ const chatSocket = new WebSocket(
       }
 
       answerInput.value = '';
+
     }

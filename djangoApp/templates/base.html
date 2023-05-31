@@ -1,26 +1,102 @@
-{%load static%}
+{% load static %}
 <html>
 <head>
     <title>{% block title %}{% endblock %}</title>
+   <style>
+        body {
+            background: #f2f2f2;
+            margin: 0;
+            padding: 20px;
+        }
+
+        #header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .user-info img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .user-details {
+            display: none;
+            margin-top: 10px;
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+
+        }
+
+        .user-details p {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .logout-link {
+            margin-top: 5px;
+        }
+
+        #content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+    </style>
     <!--
-    <link href=" % static "css/base.css" %}" rel="stylesheet">
+    <link href="{% static 'css/base.css' %}" rel="stylesheet">
     -->
 </head>
 <body>
 <div id="header">
-    <span class="header">
-        {% if request.user.is_authenticated %}
-            Hello, {{ request.user.username }}!
-            <a href="{% url 'logout' %}">Logout</a>
-        {% else %}
-            <a href="{% url 'login' %}">Log-in</a>
-        {% endif %}
-    </span>
-    <br>
+    {% if request.user.is_authenticated %}
+        <span class="user-info">
+            <img src="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg" alt="User Avatar" onclick="toggleUserDetails()">
+        </span>
+        <div class="user-details" id="userDetails">
+            <p>Full Name: {{ request.user.first_name }} {{ request.user.last_name }}</p>
+            <p>Email: {{ request.user.email }}</p>
+        </div>
+        <a href="{% url 'logout' %}">Logout</a>
+    {% else %}
+        <a href="{% url 'login' %}">Log-in</a>
+    {% endif %}
 </div>
 <div id="content">
     {% block content %}
     {% endblock %}
 </div>
+
+<script>
+    function toggleUserDetails() {
+              var userDetails = document.getElementById('userDetails');
+        if (userDetails.style.display === 'none') {
+            userDetails.style.display = 'block';
+            var height = userDetails.clientHeight + 'px';
+            userDetails.style.height = '0';
+            userDetails.style.transition = 'height 0.3s ease';
+            setTimeout(function() {
+                userDetails.style.height = height;
+            }, 10);
+        } else {
+            userDetails.style.height = '0';
+            setTimeout(function() {
+                userDetails.style.display = 'none';
+            }, 300);
+        }
+
+    }
+</script>
 </body>
 </html>

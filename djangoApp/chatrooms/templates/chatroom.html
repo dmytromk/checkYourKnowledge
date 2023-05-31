@@ -1,24 +1,145 @@
-<!-- chat/templates/chat/room.html -->
-{%load static%}
+{% load static %}
 {% block content %}
 <html>
 <head>
     <meta charset="utf-8"/>
     <title>ClassRoom</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 20px;
+        }
+
+        #chat-log {
+            width: 100%;
+            height: 300px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            resize: vertical;
+            overflow-y: auto;
+        }
+
+        #chat-message-input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+        }
+
+        #chat-message-submit, #createTask {
+            padding: 10px 20px;
+            margin-top: 10px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        #createTask {
+            background-color: #337ab7;
+        }
+
+        #chat-message-submit:hover, #createTask:hover {
+            background-color: #45a049;
+        }
+
+        #chat-message-submit:active, #createTask:active {
+            background-color: #3e8e41;
+        }
+.chat-box {
+  width: 600px;
+  margin: 0 auto;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.chat-container {
+  height: 400px;
+  background-color: #f1f1f1;
+  border-radius: 10px;
+  overflow-y: auto;
+  padding: 10px;
+}
+
+.chat-messages {
+  margin-bottom: 10px;
+}
+
+.chat-input {
+  display: flex;
+}
+
+#message-input {
+  flex: 1;
+  border: none;
+  border-radius: 5px;
+  padding: 5px;
+  margin-right: 5px;
+}
+
+#send-button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.message {
+  display: flex;
+  align-items: flex-start;
+}
+
+.message-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.message-text {
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.message-username {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+    </style>
 </head>
 <body>
-    <textarea id="chat-log" cols="100" rows="20"></textarea><br>
-    <input id="chat-message-input" type="text" size="100"><br>
-    <input id="chat-message-submit" type="button" value="Send"><br>
-    <input id="createTask" type="button" value="create Task"><br>
+<div class="chat-box">
+  <div class="chat-container">
+    <div class="chat-messages" id="chat-messages">
+      <!-- Messages will be dynamically added here -->
+    </div>
+    <div class="chat-input">
+      <input type="text" id="message-input" placeholder="Type your message...">
+      <button id="send-button">Send</button>
+    </div>
+  </div>
+</div>
 
+<br>
+
+    <input id="createTask" type="button" value="Create Task"><br>
+    <div id="content"></div>
     <script>
+
          window.userName = {{username}};
          window.roomName = '{{room_name}}';
-
+         console.log( window.userName);
     </script>
 
-    <script  src="{% static 'chatroom.js' %}"></script>
+    <script src="{% static 'chatroom.js' %}"></script>
 </body>
 </html>
 {% endblock %}

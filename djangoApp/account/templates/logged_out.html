@@ -1,6 +1,26 @@
 {% extends "base.html" %}
 {% block title %}Logged out{% endblock %}
 {% block content %}
+    <style>
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 16px;
+        }
+
+        a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+
     <h1>Logged out</h1>
     <p>You have been successfully logged out. You can <a href="{% url 'login' %}">log-in again</a>.</p>
 {% endblock %}

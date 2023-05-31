@@ -1,12 +1,33 @@
-
 {% extends "base.html" %}
-{%load static%}
+{% load static %}
 
 {% block title %}Log-in{% endblock %}
 {% block content %}
+<html>
+<head>
+    <style>
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+        }
+
+        input[type="button"] {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
     What chat room would you like to enter?<br>
     <input id="room-name-input" type="text" size="100"><br>
     <input id="room-name-submit" type="button" value="Enter">
 
-     <script  src="{% static 'home.js' %}"></script>
+    <script src="{% static 'home.js' %}"></script>
+</body>
+    </html>
 {% endblock %}
