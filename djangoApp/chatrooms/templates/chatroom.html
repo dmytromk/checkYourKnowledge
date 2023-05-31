@@ -141,6 +141,10 @@
          console.log( window.userName);
     </script>
 
+    {% if is_owner %}
+        <input id="generate-link" type="button" name="generate Link" value="generate Link"><br>
+    {% endif %}
+
     <script src="{% static 'chatroom.js' %}"></script>
 </body>
 </html>

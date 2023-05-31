@@ -97,17 +97,21 @@
     <div class="loader"></div>
 </div>
 <div id="header">
-    <span class="header">
-        {% if request.user.is_authenticated %}
-            Hello, {{ request.user.first_name }}!
-            <a href="{% url 'settings' %}">Profile settings</a>
-            <a href="{% url 'logout' %}">Logout</a>
-            <a href="{% url 'create_classroom' %}">Create Classroom</a>
-        {% else %}
-            <a href="{% url 'login' %}">Log-in</a>
-        {% endif %}
-    </span>
-    <br>
+    {% if request.user.is_authenticated %}
+        <span class="user-info">
+            <img src="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg" alt="User Avatar" onclick="toggleUserDetails()">
+        </span>
+        <div class="user-details" id="userDetails">
+            <p>Full Name: {{ request.user.first_name }} {{ request.user.last_name }}</p>
+            <p>Email: {{ request.user.email }}</p>
+        </div>
+        <a href="{% url 'settings' %}">Profile settings</a>
+        <a href="{% url 'logout' %}">Logout</a>
+        <a href="{% url 'create_classroom' %}">Create Classroom</a>
+        <a href="{% url 'join_classroom' %}">Join Classroom</a>
+    {% else %}
+        <a href="{% url 'login' %}">Log-in</a>
+    {% endif %}
 </div>
 <div id="content">
     {% block content %}

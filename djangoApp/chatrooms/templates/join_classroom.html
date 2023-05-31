@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Join New Classroom{% endblock %}
+{% block content %}
+
+    <div class="classjoin_fields">
+        <h1>Join New classroom</h1>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Join Class</button>
+        </form>
+    </div>
+{% endblock %}

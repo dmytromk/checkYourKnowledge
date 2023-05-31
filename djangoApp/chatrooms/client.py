@@ -1,8 +1,7 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
 from django.contrib.auth import get_user_model
-from .models import Message,Task_model
+from asgiref.sync import async_to_sync
 from datetime import datetime
-from .Task import Task
 from .CommandFactory import *
 User = get_user_model()
 import json
@@ -12,8 +11,8 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
     def __init__(self, *args, **kwargs):
         print('init')
         super().__init__(*args, **kwargs)
-
         self.listOfTasks = []
+
     def addTaskToListOfTasks(self,t : Task):
         self.listOfTasks.append(t)
 

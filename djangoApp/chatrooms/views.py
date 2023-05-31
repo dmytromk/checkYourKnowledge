@@ -3,6 +3,7 @@ from django.utils.safestring import mark_safe
 import json
 from django.contrib.auth.decorators import login_required
 from .forms import *
+from .models import Classroom, ClassroomUserList
 
 
 def home(request):
@@ -11,10 +12,14 @@ def home(request):
 
 @login_required
 def room(request, room_name):
+    classroom = Classroom.objects.get(token=room_name)
+    is_owner = (classroom.owner == request.user)
+
     return render(request, 'chatroom.html', {
         'room_name': room_name,
         'username': mark_safe(json.dumps(request.user.username)),
-
+        'classroom': classroom,
+        'is_owner': is_owner,
     })
 
 
@@ -43,7 +48,32 @@ def create_classroom(request):
             classroom = form.save()
             classroom.owner = request.user
             classroom.save()
+            classroom_user = ClassroomUserList()
+            classroom_user.classroom = classroom
+            classroom_user.user = classroom.owner
+            classroom_user.role = "TE"
+            classroom_user.save()
             return redirect(f'/chat/{classroom.token}')
     else:
         form = ClassroomCreationForm()
     return render(request, 'create_classroom.html', {'form': form})
+
+@login_required()
+def join_class(request):
+    if request.method == 'POST':
+        form = JoinClassForm(request.POST)
+        if form.is_valid():
+            code = form.cleaned_data['code']
+            classroom = Classroom.objects.get(join_code=code)
+            if classroom.exists():
+                if ClassroomUserList.objects.get(classroom=classroom, user=request.user).exists():
+                    render(request, '#.html')
+                else:
+                    new_user = ClassroomUserList()
+                    new_user.classroom = classroom
+                    new_user.role = "ST"
+                    new_user.user = request.user
+    else:
+        form = JoinClassForm()
+
+    return render(request, 'join_classroom.html', {'form': form})

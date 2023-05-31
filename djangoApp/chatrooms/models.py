@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.db import models
+from django.utils.crypto import get_random_string
 User = get_user_model()
 
 
@@ -33,9 +34,18 @@ class Classroom(models.Model):
     join_code = models.TextField()
     token = models.TextField()
 
+    def generate_invite(self):
+        self.join_code = get_random_string(16)
+        self.save()
+        return self.join_code
+
 
 class ClassroomUserList(models.Model):
+    CLASS_ROLES = [
+        ("TE", "teacher"),
+        ("ST", "student"),
+    ]
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now_add=True)
-    role = models.TextField()
+    role = models.TextField(choices=CLASS_ROLES)

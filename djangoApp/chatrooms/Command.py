@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from . import JsonConverter
-from .models import Message,Task_model
+from .models import Message, Task_model, Classroom
+from .Task import Task
 import json
 from datetime import datetime
 from django.contrib.auth import get_user_model
@@ -28,6 +29,7 @@ class FetchCommand(Command):
         }
 
         await self.consumer.send_chat_message_fetch(content)
+
 class FetchTasks(Command):
     def __init__(self, consumer, data):
         self.consumer = consumer
@@ -136,6 +138,15 @@ class NewTaskCommand(Command):
         }
         await self.consumer.sendTask(content)
 
+class GenerateInviteLink(Command):
+    def __init__(self, consumer, data):
+        self.consumer = consumer
+        self.data = data
+
+    async def execute(self):
+        token = self.data['token']
+        chatroom = Classroom.objects.get(token=token)
+        invite_link = chatroom.generate_invite()
 
 class CheckAnswearCommand(Command):
     def __init__(self, consumer, data):

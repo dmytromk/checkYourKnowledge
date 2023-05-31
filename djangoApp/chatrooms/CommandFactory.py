@@ -15,6 +15,8 @@ class CommandFactory:
             return GetTask(consumer, data)
         elif command_name == 'fetch_task':
             return FetchTasks(consumer, data)
+        elif command_name == 'generate_link':
+            return GenerateInviteLink(consumer, data)
 
         # Handle unknown commands or return a default command
         return None
