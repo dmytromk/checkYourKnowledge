@@ -1,61 +1,82 @@
 {% extends "base.html" %}
 {% block title %}Registration{% endblock %}
 {% block content %}
+<html>
+<head>
     <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f2f2f2;
-            font-family: Arial, sans-serif;
-        }
+     body {
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
+    padding: 20px;
+  }
 
-        .registration_fields {
-            max-width: 400px;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
+  form {
+    background-color: #fff;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
 
-        .registration_fields h1 {
-            font-size: 24px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
+  label {
+    display: block;
+    margin-bottom: 10px;
+  }
 
-        .registration_fields input[type="submit"] {
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: #fff;
-            border: none;
-            cursor: pointer;
-            width: 100%;
-        }
+  input[type="text"],
+  input[type="email"],
+  input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+    font-size: 16px;
+  }
 
-        .registration_fields p.text-center {
-            font-size: 16px;
-            text-align: center;
-        }
+  input[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+  }
 
-        .registration_fields p.text-center a {
-            color: #4CAF50;
-            text-decoration: none;
-        }
-
-        .registration_fields p.text-center a:hover {
-            text-decoration: underline;
-        }
+  input[type="submit"]:hover {
+    background-color: #45a049;
+  }
     </style>
+    </head>
+<body>
+<form action="." method="POST">
+                {% csrf_token %}
+  <label for="username">Username:</label>
+  {{user_form.username}}
 
-    <div class="registration_fields">
-        <h1>Create an account</h1>
-        <form action="." method="POST">
-            {% csrf_token %}
-            {{ user_form.as_p }}
-            <p><input type="submit" value="Create my account"></p>
-        </form>
-        <p class="text-center">If you already have an account, <a href="/login">login</a> instead.</p>
-    </div>
+  <label for="firstname">First Name:</label>
+    {{user_form.first_name}}
+
+  <label for="lastname">Last Name:</label>
+   {{user_form.last_name}}
+
+  <label for="email">Email:</label>
+     {{user_form.email}}
+
+
+  <label for="password">Password:</label>
+       {{user_form.password1}}
+
+
+  <label for="password2">Confirm Password:</label>
+         {{user_form.password2}}
+
+
+  <input type="submit" value="Register">
+</form>
+</body>
+</html>
 {% endblock %}

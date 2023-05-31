@@ -106,3 +106,10 @@
             chatSocket.close();
             window.location.pathname = '/chat/' + roomName + '/' + 'createtask/';
         };
+const header = document.getElementById('header');
+
+const images = [
+  'https://cdn.pixabay.com/photo/2014/02/27/16/10/flowers-276014_1280.jpg', // Replace with the path to your images
+  'https://images.unsplash.com/photo-1610878180933-123728745d22?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y2FuYWRhJTIwbmF0dXJlfGVufDB8fDB8fHww&w=1000&q=80',
+  'https://natureconservancy-h.assetsadobe.com/is/image/content/dam/tnc/nature/en/photos/Zugpsitze_mountain.jpg?crop=0%2C176%2C3008%2C1654&wid=4000&hei=2200&scl=0.752'
+];
