@@ -2,7 +2,6 @@ from django import forms
 from .models import Classroom
 from django.utils.crypto import get_random_string
 
-
 class ClassroomCreationForm(forms.ModelForm):
     name = forms.CharField(label="Classroom name")
 

@@ -39,4 +39,3 @@ class ClassroomUserList(models.Model):
     classroom_id = models.ForeignKey(Classroom, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now_add=True)
     role = models.TextField()
-
