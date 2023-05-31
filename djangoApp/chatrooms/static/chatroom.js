@@ -1,6 +1,6 @@
         var roomName = window.roomName;
         var username =  window.userName;
-
+        const messageInput = document.querySelector('#messageInput');
         const chatSocket = new WebSocket(
             'ws://'
             + window.location.host
@@ -29,7 +29,7 @@
            if(data['type']==='chat_message'){
              const message = data['message'];
              const from = data['author'];
-               const messageElement = document.createElement('div');
+            const messageElement = document.createElement('div');
     messageElement.classList.add('message');
     const chatMessages = document.getElementById('chat-messages');
     const avatarElement = document.createElement('img');
@@ -57,24 +57,40 @@
 
            }
            if(data['type']==='create_task'){
-           var div = document.createElement('div');
-
+           const TaskName = data['task_name'];
+           const pointsInt = data['points'];
            const id = data['id'];
-           const message = data['message_problem'];
-           const name_of_tasks = data['task_name'];
-           div.className = 'customProblem';
-           div.innerHTML = name_of_tasks;
-           div.style.backgroundColor = '#3498db';
-           div.style.padding = '10px 20px';
-           div.style.color = '#fff';
-           div.style.cursor = 'pointer';
-           div.style.margin = '10px 0px 0px 0px';
-           div.addEventListener('click', function() {
 
-            window.location.pathname = '/chat/' + roomName + '/' + id + '/';
-            });
-           var parentElement = document.getElementById('content');
-           parentElement.appendChild(div);
+          var div = document.createElement('div');
+          div.style.backgroundColor = '#3498db';
+          div.style.padding = '10px';
+          div.style.color = '#fff';
+          div.style.cursor = 'pointer';
+          div.style.margin = '10px 0';
+
+
+
+// Create the task name element
+var taskName = document.createElement('h3');
+taskName.style.fontWeight = 'bold';
+taskName.style.marginBottom = '5px';
+taskName.textContent = TaskName;
+div.appendChild(taskName);
+
+// Create the points element
+var points = document.createElement('p');
+points.style.margin = '0';
+points.textContent = 'Points: ' + String(pointsInt); // Replace '10' with the actual points value
+div.appendChild(points);
+
+// Add the click event listener
+div.addEventListener('click', function() {
+  window.location.pathname = '/chat/' + roomName + '/' + id + '/';
+});
+
+// Append the div to the parent element
+var parentElement = document.getElementById('content');
+parentElement.appendChild(div);
         }
         };
 
@@ -107,9 +123,3 @@
             window.location.pathname = '/chat/' + roomName + '/' + 'createtask/';
         };
 const header = document.getElementById('header');
-
-const images = [
-  'https://cdn.pixabay.com/photo/2014/02/27/16/10/flowers-276014_1280.jpg', // Replace with the path to your images
-  'https://images.unsplash.com/photo-1610878180933-123728745d22?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y2FuYWRhJTIwbmF0dXJlfGVufDB8fDB8fHww&w=1000&q=80',
-  'https://natureconservancy-h.assetsadobe.com/is/image/content/dam/tnc/nature/en/photos/Zugpsitze_mountain.jpg?crop=0%2C176%2C3008%2C1654&wid=4000&hei=2200&scl=0.752'
-];
