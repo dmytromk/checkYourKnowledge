@@ -34,7 +34,7 @@
     const chatMessages = document.getElementById('chat-messages');
     const avatarElement = document.createElement('img');
     avatarElement.classList.add('message-avatar');
-    avatarElement.src = 'https://images.unsplash.com/photo-1508341591423-4347099e1f19?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8bWVufGVufDB8fDB8fHww&w=1000&q=80'; // Replace with the path to your avatar image
+    avatarElement.src = 'https://images.unsplash.com/photo-1508341591423-4347099e1f19?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8bWVufGVufDB8fDB8fHww&w=1000&q=80';
     messageElement.appendChild(avatarElement);
 
     const messageContentElement = document.createElement('div');
@@ -42,7 +42,11 @@
 
     const usernameElement = document.createElement('div');
     usernameElement.classList.add('message-username');
-    usernameElement.textContent = from; // Replace with the user name
+    if(from === username){
+    usernameElement.textContent = 'You'; }
+    else{
+    usernameElement.textContent = from;
+    }
     messageContentElement.appendChild(usernameElement);
 
     const messageTextElement = document.createElement('div');
