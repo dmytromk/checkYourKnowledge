@@ -3,8 +3,7 @@
 
 {% block title %}Log-in{% endblock %}
 {% block content %}
-<html>
-<head>
+
     <style>
         input[type="text"] {
             width: 100%;
@@ -20,14 +19,98 @@
             border: none;
             cursor: pointer;
         }
+
+        #flash-cards{
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-left: 2%;
+            margin-right: 2%;
+            width: 96%;
+            height: 100%;
+        }
+
+        #flash-card{
+            border-radius: 6% / 6%;
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+            background-color: #d6d9e1;
+            width: 240px;
+            height: 325px;
+            margin-bottom: 30px;
+            margin-top: 10px;
+            margin-right: 2px;
+            box-shadow: 0 6px 15px rgba(49, 46, 46, 0.3);
+        }
+
+        .flash-card{
+            border-radius: 6% / 6%;
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+            background-color: #d6d9e1;
+            width: 240px;
+            height: 325px;
+            margin-bottom: 30px;
+            margin-top: 10px;
+            margin-right: 2px;
+            box-shadow: 0 6px 15px rgba(49, 46, 46, 0.3);
+        }
+
     </style>
-</head>
-<body>
+
+
     What chat room would you like to enter?<br>
     <input id="room-name-input" type="text" size="100"><br>
     <input id="room-name-submit" type="button" value="Enter">
+    <script>
+        console.log({{classroomlist}});
+         const classroomlist = {{ classroomlist|safe }};
+         document.addEventListener('DOMContentLoaded', function() {
+    let temp = 0;
+    classroomlist.forEach(function(classroom) {
+        // Create a new div element
+        let classroomdiv = document.createElement('div');
 
+        // Assign an ID to the div
+        classroomdiv.id = 'flash-card' + temp.toString();
+        temp++;
+
+        classroomdiv.classList.add('flash-card');
+
+        // Create an h2 element for the header
+        let header = document.createElement('h2');
+
+        // Set the text content of the header to the classroom name
+        header.textContent = classroom.name;
+
+        // Create a paragraph element for the additional text
+        let paragraph = document.createElement('p');
+
+        // Set the text content of the paragraph
+        paragraph.textContent = 'Additional text goes here...';
+
+        // Append the header and paragraph elements to the div
+        classroomdiv.appendChild(header);
+        classroomdiv.appendChild(paragraph);
+
+        classroomdiv.addEventListener('click', function() {
+            let currentURL = window.location.href; // Get the current URL
+            let newURL = currentURL + '/chat/' + classroom.token + '/';
+        });
+
+        let targetDiv = document.getElementById('flash-cards'); // Replace 'target-div-id' with the ID of the target div
+        targetDiv.appendChild(classroomdiv);
+    });
+
+});
+        console.log('Hello');
+    </script>
+    <div id="flash-cards">
+
+    </div>
     <script src="{% static 'home.js' %}"></script>
-</body>
-    </html>
+
 {% endblock %}

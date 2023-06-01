@@ -128,7 +128,6 @@ function createMessage(data) {
         usernameElement.textContent = from;
     }
     messageContentElement.appendChild(usernameElement);
-
     const messageTextElement = document.createElement('div');
     messageTextElement.classList.add('message-text');
     messageTextElement.textContent = message;

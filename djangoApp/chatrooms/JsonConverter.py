@@ -39,6 +39,22 @@ class TaskToJsonConverter(ObjectToJsonConverter):
             result.append(self.convert_single(task))
         return result
 
+
+class ClassroomToJson(ObjectToJsonConverter):
+    def convert_single(self, classroom):
+
+        return {
+            'name': classroom.name,
+            'token': classroom.token
+        }
+
+    def convert_multiple(self, classrooms):
+        result = []
+        for classroom in classrooms:
+            result.append(self.convert_single(classroom))
+        return result
+
+
 class JsonConverterContext:
     def __init__(self, converter):
         self.converter = converter

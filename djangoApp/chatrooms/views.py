@@ -4,10 +4,14 @@ import json
 from django.contrib.auth.decorators import login_required
 from .forms import *
 from .models import Classroom, ClassroomUserList
+from . import JsonConverter
 
 
 def home(request):
-    return render(request, 'home.html', {})
+    classroomlist = [x.classroom for x in ClassroomUserList.objects.filter(user = request.user)]
+    jsonConverter = JsonConverter.JsonConverterContext(JsonConverter.ClassroomToJson())
+    result = jsonConverter.convert_multiple(classroomlist)
+    return render(request, 'home.html', {'classroomlist': result})
 
 
 @login_required
