@@ -18,7 +18,8 @@ class FetchCommand(Command):
         self.data = data
 
     async def execute(self):
-        messages = Message.last_10_messages()
+        class_room = self.data['room_name']
+        messages = Message.last_10_messages(class_room)
         jsonConverter = JsonConverter.JsonConverterContext(JsonConverter.MessageToJsonConverter())
         print(messages)
         content = {
@@ -81,10 +82,11 @@ class NewMessageCommand(Command):
         print('new message')
         author = self.data['author']
         message_ = self.data['message']
+        classroom = self.data['classroom_name']
         user = User.objects.get(username=author)
         dt = datetime.now()
         ts = datetime.timestamp(dt)
-        message = Message.objects.create(author=user, content=message_)
+        message = Message.objects.create(author=user, content=message_,classroom_name = classroom)
         message.save()
         jsonConverter = JsonConverter.JsonConverterContext(JsonConverter.MessageToJsonConverter())
 

@@ -16,7 +16,8 @@ chatSocket.onopen = function(e) {
 function fetchMessages() {
 
     chatSocket.send(JSON.stringify({
-        'command': 'fetch'
+        'command': 'fetch',
+        'room_name': roomName
     }));
     console.log('fetchMessages');
 };
@@ -155,7 +156,8 @@ document.querySelector('#send-button').onclick = function(e) {
     chatSocket.send(JSON.stringify({
         'command': 'new_message',
         'message': message,
-        'author': username
+        'author': username,
+        'classroom_name': roomName
 
     }));
     messageInputDom.value = '';
