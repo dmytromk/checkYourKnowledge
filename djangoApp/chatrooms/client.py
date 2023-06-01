@@ -46,9 +46,8 @@ class FetchTasks(Command):
             'command': 'tasks',
             'tasks': jsonConverter.convert_multiple(tasks)
         }
-        for task in content['tasks']:
-            print(task)
-            await self.consumer.sendTask({'task':task})
+
+        await self.consumer.send_chat_message_fetch(content)
 
 class GetTask(Command):
     def __init__(self, consumer, data):

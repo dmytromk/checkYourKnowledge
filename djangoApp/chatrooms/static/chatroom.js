@@ -46,6 +46,16 @@ chatSocket.onmessage = function(e) {
           }
 
     }
+       if(data['command']==='tasks'){
+        console.log('messages');
+          const chatMessages = document.getElementById('chat-messages');
+          chatMessages.innerHTML="";
+          for (let i=0; i<data['tasks'].length; i++) {
+          console.log(data['tasks'][i]);
+           createTask(data['tasks'][i]);
+          }
+
+    }
     else if (data['type'] === 'chat_message') {
 
         createMessage(data);
@@ -54,6 +64,10 @@ chatSocket.onmessage = function(e) {
 
     }
     else if (data['type'] === 'create_task') {
+        createTask(data);
+    }
+};
+function createTask(data) {
         const TaskName = data['task_name'];
         const pointsInt = data['points'];
         const id = data['id'];
@@ -88,8 +102,8 @@ chatSocket.onmessage = function(e) {
         // Append the div to the parent element
         var parentElement = document.getElementById('content');
         parentElement.appendChild(div);
-    }
-};
+}
+
 function createMessage(data) {
        const message = data['content'];
         const from = data['author'];
