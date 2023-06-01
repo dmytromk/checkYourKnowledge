@@ -158,5 +158,4 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
             'author': author,
             'fetch': is_fetch
         }))
-
     pass

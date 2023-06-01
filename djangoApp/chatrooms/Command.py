@@ -146,7 +146,11 @@ class GenerateInviteLink(Command):
     async def execute(self):
         token = self.data['token']
         chatroom = Classroom.objects.get(token=token)
-        invite_link = chatroom.generate_invite()
+        invite_code = chatroom.generate_invite()
+        await self.consumer.send(text_data=json.dumps({
+            'type': 'code_generation',
+            'invite_code': invite_code,
+        }))
 
 class CheckAnswearCommand(Command):
     def __init__(self, consumer, data):

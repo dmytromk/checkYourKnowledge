@@ -9,7 +9,7 @@ from django.contrib.auth.views import(
 
 from django.urls import path
 from . import views
-import chatrooms
+
 
 urlpatterns = [
 

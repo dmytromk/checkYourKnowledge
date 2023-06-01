@@ -64,10 +64,11 @@ def join_class(request):
         form = JoinClassForm(request.POST)
         if form.is_valid():
             code = form.cleaned_data['code']
-            classroom = Classroom.objects.get(join_code=code)
-            if classroom.exists():
-                if ClassroomUserList.objects.get(classroom=classroom, user=request.user).exists():
-                    render(request, '#.html')
+            if Classroom.objects.filter(join_code=code).exists():
+                classroom = Classroom.objects.get(join_code=code)
+                if ClassroomUserList.objects.filter(classroom=classroom, user=request.user).exists():
+                    user_classroom_token = Classroom.objects.get(join_code=code).token
+                    return redirect(f'/chat/{user_classroom_token}')
                 else:
                     new_user = ClassroomUserList()
                     new_user.classroom = classroom
