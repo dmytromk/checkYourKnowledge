@@ -5,6 +5,9 @@
 {% block content %}
 
     <style>
+    body{
+        overflow: auto;
+    }
         input[type="text"] {
             width: 100%;
             padding: 10px;
@@ -21,6 +24,7 @@
         }
 
         #flash-cards{
+            overflow: auto;
             display: flex;
             flex-direction: row;
             justify-content: space-around;
@@ -31,7 +35,7 @@
             height: 100%;
         }
 
-        #flash-card{
+        {##flash-card{
             border-radius: 6% / 6%;
             align-items: center;
             display: flex;
@@ -43,9 +47,10 @@
             margin-top: 10px;
             margin-right: 2px;
             box-shadow: 0 6px 15px rgba(49, 46, 46, 0.3);
-        }
+        }#}
 
         .flash-card{
+            cursor: pointer;
             border-radius: 6% / 6%;
             align-items: center;
             display: flex;
@@ -66,7 +71,7 @@
     <input id="room-name-input" type="text" size="100"><br>
     <input id="room-name-submit" type="button" value="Enter">
     <script>
-        console.log({{classroomlist}});
+        //console.log({{classroomlist}});
          const classroomlist = {{ classroomlist|safe }};
          document.addEventListener('DOMContentLoaded', function() {
     let temp = 0;
@@ -98,7 +103,8 @@
 
         classroomdiv.addEventListener('click', function() {
             let currentURL = window.location.href; // Get the current URL
-            let newURL = currentURL + '/chat/' + classroom.token + '/';
+            let newURL = currentURL + 'chat/' + classroom.token + '/';
+            window.location.href = newURL;
         });
 
         let targetDiv = document.getElementById('flash-cards'); // Replace 'target-div-id' with the ID of the target div

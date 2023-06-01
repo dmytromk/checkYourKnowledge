@@ -8,7 +8,9 @@ from . import JsonConverter
 
 
 def home(request):
-    classroomlist = [x.classroom for x in ClassroomUserList.objects.filter(user = request.user)]
+    classroomlist = []
+    if request.user.is_authenticated:
+        classroomlist = [x.classroom for x in ClassroomUserList.objects.filter(user = request.user)]
     jsonConverter = JsonConverter.JsonConverterContext(JsonConverter.ClassroomToJson())
     result = jsonConverter.convert_multiple(classroomlist)
     return render(request, 'home.html', {'classroomlist': result})
@@ -68,9 +70,12 @@ def join_class(request):
         form = JoinClassForm(request.POST)
         if form.is_valid():
             code = form.cleaned_data['code']
+            print('LOL')
             if Classroom.objects.filter(join_code=code).exists():
+                print('BASED')
                 classroom = Classroom.objects.get(join_code=code)
                 if ClassroomUserList.objects.filter(classroom=classroom, user=request.user).exists():
+                    print('GFSGSDG')
                     user_classroom_token = Classroom.objects.get(join_code=code).token
                     return redirect(f'/chat/{user_classroom_token}')
                 else:
