@@ -8,7 +8,8 @@ class MessageToJsonConverter(ObjectToJsonConverter):
         return {
             'author': message.author.username,
             'content': message.content,
-            'timestamp': str(message.timestamp)
+            'timestamp': str(message.timestamp),
+            'class_room': message.classroom_name
         }
 
     def convert_multiple(self, messages: list[json]):

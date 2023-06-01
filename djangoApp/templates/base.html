@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>{% block title %}{% endblock %}</title>
-   <style>
+    <style>
         body {
             background: #f2f2f2;
             margin: 0;
@@ -35,7 +35,6 @@
             background-color: #fff;
             padding: 10px;
             border-radius: 5px;
-
         }
 
         .user-details p {
@@ -53,12 +52,50 @@
             border-radius: 5px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+
+        .loader-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .loader {
+            width: 60px;
+            height: 60px;
+            border: 4px solid #3498db;
+            border-top-color: #f3f3f3;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loader-wrapper.active {
+            opacity: 1;
+            visibility: visible;
+        }
     </style>
     <!--
     <link href="{% static 'css/base.css' %}" rel="stylesheet">
     -->
 </head>
 <body>
+<div class="loader-wrapper">
+    <div class="loader"></div>
+</div>
 <div id="header">
     {% if request.user.is_authenticated %}
         <span class="user-info">
@@ -80,7 +117,7 @@
 
 <script>
     function toggleUserDetails() {
-              var userDetails = document.getElementById('userDetails');
+        var userDetails = document.getElementById('userDetails');
         if (userDetails.style.display === 'none') {
             userDetails.style.display = 'block';
             var height = userDetails.clientHeight + 'px';
@@ -95,8 +132,19 @@
                 userDetails.style.display = 'none';
             }, 300);
         }
-
     }
+
+    window.addEventListener('DOMContentLoaded', function() {
+        var loaderWrapper = document.querySelector('.loader-wrapper');
+        loaderWrapper.classList.add('active');
+    });
+
+    window.addEventListener('load', function() {
+        var loaderWrapper = document.querySelector('.loader-wrapper');
+        setTimeout(function() {
+            loaderWrapper.classList.remove('active');
+        }, 500); // Adjust the delay as needed
+    });
 </script>
 </body>
 </html>
