@@ -1,12 +1,13 @@
 from django.shortcuts import render, redirect
 from django.utils.safestring import mark_safe
+from django import forms
 import json
 from django.contrib.auth.decorators import login_required
 from .forms import *
 from .models import Classroom, ClassroomUserList
 from . import JsonConverter
 
-
+@login_required
 def home(request):
     classroomlist = []
     if request.user.is_authenticated:
@@ -85,6 +86,8 @@ def join_class(request):
                     new_user.user = request.user
                     new_user.save()
                     return redirect(f'/chat/{classroom.token}')
+            else:
+                form.add_error('code', 'Invalid code. Please enter a valid code.')
     else:
         form = JoinClassForm()
 

@@ -1,89 +1,89 @@
 {% extends "base.html" %}
 {% block title %}Create Task{% endblock %}
 {% load static %}
+
+{% block styles %}
+    <style>
+        @font-face {
+            font-family: 'CustomFont';
+            src: url('{% static 'fonts/CustomFont.ttf' %}') format('truetype');
+        }
+
+        body {
+            font-family: 'CustomFont', Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .block {
+            background-color: #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-align: left;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            margin-top: 0;
+            font-size: 24px;
+        }
+
+        #photoInput {
+            margin-bottom: 10px;
+            display: block;
+            float: left; /* Added */
+        }
+
+        #answerInput {
+            margin-bottom: 10px;
+            padding: 10px;
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #resultDiv {
+            margin-top: 20px;
+        }
+
+        #pointsDiv {
+            position: relative; /* Changed to relative positioning */
+            display: inline-block; /* Added */
+            font-size: 18px;
+            color: #555;
+            margin-top: 10px; /* Adjusted margin-top */
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            margin-top: 10px;
+        }
+
+    </style>
+{% endblock %}
+
 {% block content %}
-<html>
-    <head>
-        <style>
-            @font-face {
-                font-family: 'CustomFont';
-                src: url('{% static 'fonts/CustomFont.ttf' %}') format('truetype');
-            }
-
-            body {
-                font-family: 'CustomFont', Arial, sans-serif;
-                background-color: #f2f2f2;
-                margin: 0;
-                padding: 20px;
-            }
-
-            .block {
-                background-color: #fff;
-                padding: 20px;
-                margin-bottom: 20px;
-                border: 1px solid #ccc;
-                border-radius: 5px;
-                text-align: left;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            }
-
-            h2 {
-                margin-top: 0;
-                font-size: 24px;
-            }
-
-            #photoInput {
-                margin-bottom: 10px;
-                display: block;
-                float: left; /* Added */
-            }
-
-            #answerInput {
-                margin-bottom: 10px;
-                padding: 10px;
-                width: 100%;
-                box-sizing: border-box;
-                border: 1px solid #ccc;
-                border-radius: 5px;
-                font-size: 14px;
-            }
-
-            button {
-                padding: 10px 20px;
-                background-color: #4CAF50;
-                color: #fff;
-                border: none;
-                cursor: pointer;
-                border-radius: 5px;
-                font-size: 14px;
-                transition: background-color 0.3s ease;
-            }
-
-            button:hover {
-                background-color: #45a049;
-            }
-
-            #resultDiv {
-                margin-top: 20px;
-            }
-
-            #pointsDiv {
-                position: relative; /* Changed to relative positioning */
-                display: inline-block; /* Added */
-                font-size: 18px;
-                color: #555;
-                margin-top: 10px; /* Adjusted margin-top */
-            }
-
-            img {
-                max-width: 100%;
-                height: auto;
-                margin-top: 10px;
-            }
-
-        </style>
-    </head>
-    <body>
     <div class="block">
         <h2 id="problem">Content Block</h2>
         <input type="file" id="photoInput" accept="image/*">
@@ -119,6 +119,4 @@
         </script>
         <script src="{% static 'task.js' %}"></script>
     </div>
-</body>
-</html>
 {% endblock %}

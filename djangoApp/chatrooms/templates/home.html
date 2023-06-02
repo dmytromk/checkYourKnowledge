@@ -2,12 +2,12 @@
 {% load static %}
 
 {% block title %}Log-in{% endblock %}
-{% block content %}
 
+{% block styles %}
     <style>
-    body{
-        overflow: auto;
-    }
+        body{
+            overflow: auto;
+        }
         input[type="text"] {
             width: 100%;
             padding: 10px;
@@ -29,6 +29,7 @@
             flex-direction: row;
             justify-content: space-around;
             flex-wrap: wrap;
+            max-height: 680px;
             margin-left: 2%;
             margin-right: 2%;
             width: 96%;
@@ -57,19 +58,16 @@
             flex-direction: column;
             background-color: #d6d9e1;
             width: 240px;
-            height: 325px;
+            height: 300px;
             margin-bottom: 30px;
             margin-top: 10px;
             margin-right: 2px;
             box-shadow: 0 6px 15px rgba(49, 46, 46, 0.3);
         }
-
     </style>
+{% endblock %}
 
-
-    What chat room would you like to enter?<br>
-    <input id="room-name-input" type="text" size="100"><br>
-    <input id="room-name-submit" type="button" value="Enter">
+{% block content %}
     <script>
         //console.log({{classroomlist}});
          const classroomlist = {{ classroomlist|safe }};

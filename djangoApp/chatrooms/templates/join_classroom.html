@@ -1,11 +1,91 @@
 {% extends "base.html" %}
 {% block title %}Join New Classroom{% endblock %}
-{% block content %}
 
+{% block styles %}
+    <style>
+        .card h2 {
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .card input[type="text"],
+        .card input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+        }
+
+        .card input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        .card p.text-center {
+            font-size: 14px;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .card p.text-center a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+
+        .card p.text-center a:hover {
+            text-decoration: underline;
+        }
+
+        .classjoin_fields {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 80vh;
+            min-height: 280px;
+        }
+
+        .classjoin_fields h1 {
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .classjoin_fields form {
+            width: 400px;
+            padding: 20px;
+            background-color: #f2f2f2;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .classjoin_fields form input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+        }
+
+        .classjoin_fields form button[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
     <div class="classjoin_fields">
-        <h1>Join New classroom</h1>
-        <form method="post">
+        <form method="post" class="card">
             {% csrf_token %}
+            <h2 class="text-center">Join New Classroom</h2>
             {{ form.as_p }}
             <button type="submit">Join Class</button>
         </form>
