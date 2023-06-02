@@ -83,6 +83,8 @@ def join_class(request):
                     new_user.classroom = classroom
                     new_user.role = "ST"
                     new_user.user = request.user
+                    new_user.save()
+                    return redirect(f'/chat/{classroom.token}')
     else:
         form = JoinClassForm()
 
