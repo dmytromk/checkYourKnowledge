@@ -86,7 +86,15 @@
         <form method="post" class="card">
             {% csrf_token %}
             <h2 class="text-center">Join New Classroom</h2>
-            {{ form.as_p }}
+            {% for field in form %}
+                <div>
+                    {{ field.label_tag }}
+                    {{ field }}
+                </div>
+                {% if field.errors %}
+                    <p style="color: red">{{ field.errors|striptags }}</p>
+                {% endif %}
+            {% endfor %}
             <button type="submit">Join Class</button>
         </form>
     </div>

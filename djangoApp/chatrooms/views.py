@@ -87,7 +87,7 @@ def join_class(request):
                     new_user.save()
                     return redirect(f'/chat/{classroom.token}')
             else:
-                form.add_error('code', 'Invalid code. Please enter a valid code.')
+                form.add_error('code', 'No such classroom. Please enter a valid code.')
     else:
         form = JoinClassForm()
 
