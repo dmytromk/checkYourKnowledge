@@ -29,7 +29,7 @@
             border: 1px solid #ccc;
         }
 
-        #chat-message-submit, #createTask {
+        #chat-message-submit, .btn {
             padding: 10px 20px;
             margin-top: 10px;
             background-color: #4CAF50;
@@ -38,15 +38,15 @@
             cursor: pointer;
         }
 
-        #createTask {
+        .btn {
             background-color: #337ab7;
         }
 
-        #chat-message-submit:hover, #createTask:hover {
+        #chat-message-submit:hover, .btn:hover {
             background-color: #45a049;
         }
 
-        #chat-message-submit:active, #createTask:active {
+        #chat-message-submit:active, .btn:active {
             background-color: #3e8e41;
         }
 .chat-box {
@@ -132,7 +132,7 @@
 
 <br>
 
-    <input id="createTask" type="button" value="Create Task"><br>
+    <input id="createTask" class="btn" type="button" value="Create Task"><br>
     <div id="content"></div>
     <script>
 
@@ -142,7 +142,7 @@
     </script>
 
     {% if is_owner %}
-        <input id="generate-link" type="button" name="generate Link" value="generate Link"><br>
+        <input id="generate-link" class="btn" type="button" name="generate Link" value="Generate Link"><br>
         <input type="text" id="codeField" readonly>
     {% endif %}
 
