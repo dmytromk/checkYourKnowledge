@@ -9,6 +9,15 @@
             padding: 20px;
         }
 
+        a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
         #header {
             text-align: center;
             margin-bottom: 20px;
@@ -95,22 +104,11 @@
         p {
             font-size: 16px;
         }
-
-        a {
-            color: #4CAF50;
-            text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
     </style>
     {% block styles %}
     {% endblock %}
-    <!--
-    <link href="{% static 'css/base.css' %}" rel="stylesheet">
-    -->
 </head>
+
 <body>
 <div class="loader-wrapper">
     <div class="loader"></div>

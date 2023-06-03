@@ -58,14 +58,18 @@ chatSocket.onmessage = function(e) {
 
     }
     else if (data['type'] === 'chat_message') {
-
         createMessage(data);
         messageInput.value = '';
-
-
     }
+
     else if (data['type'] === 'create_task') {
         createTask(data);
+    }
+
+    else if(data['type'] === 'code_generation'){
+        const invite_code = data['invite_code'];
+        var field = document.getElementById("codeField");
+        field.value = invite_code;
     }
 };
 function createTask(data) {
@@ -148,7 +152,6 @@ document.querySelector('#message-input').onkeyup = function(e) {
     }
 };
 
-
 document.querySelector('#send-button').onclick = function(e) {
     const messageInputDom = document.querySelector('#message-input');
     const message = messageInputDom.value;
@@ -162,6 +165,7 @@ document.querySelector('#send-button').onclick = function(e) {
     }));
     messageInputDom.value = '';
 };
+
 document.querySelector('#createTask').onclick = function(e) {
     const messageInputDom = document.querySelector('#chat-message-input');
     chatSocket.close();

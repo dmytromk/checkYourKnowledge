@@ -3,62 +3,81 @@
 
 {% block styles %}
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        .center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 80vh;
+            min-height: 660px;
+        }
+
+        .card {
+            width: 400px;
+            padding: 20px;
             background-color: #f2f2f2;
-            padding: 20px;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
-        form {
-            background-color: #fff;
-            max-width: 400px;
-            margin: 0 auto;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        .card h2 {
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 20px;
         }
 
-        label {
-            display: block;
-            margin-bottom: 10px;
-        }
-
-        input[type="text"],
-        input[type="email"],
-        input[type="password"] {
+        .card input[type="text"],
+        .card input[type="email"],
+        .card input[type="password"] {
             width: 100%;
             padding: 10px;
+            margin-bottom: 10px;
             border: 1px solid #ccc;
-            border-radius: 5px;
-            box-sizing: border-box;
-            margin-bottom: 20px;
-            font-size: 16px;
         }
 
-        input[type="submit"] {
+        .card input[type="submit"] {
+            width: 100%;
+            padding: 10px;
             background-color: #4CAF50;
-            color: white;
-            padding: 10px 20px;
+            color: #fff;
             border: none;
-            border-radius: 5px;
             cursor: pointer;
-            font-size: 16px;
         }
 
-        input[type="submit"]:hover {
-            background-color: #45a049;
+        .card p.text-center {
+            font-size: 14px;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .card p.text-center a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+
+        .card p.text-center a:hover {
+            text-decoration: underline;
         }
     </style>
 {% endblock %}
 
 {% block content %}
-    <div class="registration_fields">
-        <h1>Create an account</h1>
-        <form action="." method="POST">
+
+    <div class="center">
+        <form action="." method="POST" class="card" novalidate>
+            <h2>Create an account</h2>
             {% csrf_token %}
-            {{ user_form.as_p }}
+            {% for field in user_form %}
+                <div>
+                    {{ field.label_tag }}
+                    {{ field }}
+                </div>
+                {% if field.errors %}
+                    <p style="color: red">{{ field.errors|striptags }}</p>
+                {% endif %}
+            {% endfor %}
             <p><input type="submit" value="Create my account"></p>
+            <hr>
+            <p class="text-center">If you already have an account, <a href="{% url 'login' %}">login</a> instead.</p>
         </form>
-        <p class="text-center">If you already have an account, <a href={% url "login" %}>login</a> instead.</p>
     </div>
 {% endblock %}
