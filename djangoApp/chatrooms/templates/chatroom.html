@@ -131,9 +131,9 @@
 </div>
 
 <br>
-
+     {% if is_owner %}
     <input id="createTask" class="btn" type="button" value="Create Task"><br>
-    {% if is_owner %}
+
     <div>You are teacher</div>
     {% endif %}
 
