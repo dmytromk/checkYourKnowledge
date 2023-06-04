@@ -27,7 +27,8 @@ function fetchTasks() {
     console.log('fetchTasks');
     chatSocket.send(JSON.stringify({
         'command': 'fetch_task',
-        'room_name': roomName
+        'room_name': roomName,
+        'username': username
     }));
 
 
@@ -54,7 +55,7 @@ chatSocket.onmessage = function(e) {
         chatMessages.innerHTML="";
         for (let i=0; i<data['tasks'].length; i++) {
             console.log(data['tasks'][i]);
-            createTask(data['tasks'][i]);
+            createTask(data['tasks'][i],data['answers'][i]);
         }
 
     }
@@ -64,7 +65,7 @@ chatSocket.onmessage = function(e) {
     }
 
     else if (data['type'] === 'create_task') {
-        createTask(data);
+        createTask(data,undefined);
     }
 
     else if(data['type'] === 'code_generation'){
@@ -73,23 +74,27 @@ chatSocket.onmessage = function(e) {
         field.value = invite_code;
     }
 };
-function createTask(data) {
-    const userAnswer = data['user_ans'];
-    const TaskName = data['task_name'];
-    const pointsInt = data['points'];
-    const id = data['id'];
+function createTask(tasks,answers) {
+    const userAnswer = tasks['user_ans'];
+    const TaskName = tasks['task_name'];
+    const pointsInt = tasks['points'];
+    const id = tasks['id'];
 
     var div = document.createElement('div');
+    div.style.color = "#fff"
     div.style.backgroundColor = '#3498db';
     div.style.padding = '10px';
-    if(true){
-    div.style.color = '#fff';
+    console.log(tasks);
+
+    if(answers === undefined){
+    div.style.backgroundColor = '#3498db';
 }
-else if(user_ans === data['answer']){
-    div.style.color = '#00FF00';
+
+else if(answers['answer'] === tasks['content_answer']){
+    div.style.backgroundColor = '#00FF00';
 }
-else if(user_ans != data['answer']){
-    div.style.color = '#FF0000';
+else if(answers['answer'] != tasks['content_answer']){
+    div.style.backgroundColor = '#FF0000';
 }
     div.style.cursor = 'pointer';
     div.style.margin = '10px 0';

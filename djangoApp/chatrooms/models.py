@@ -57,3 +57,8 @@ class Answer(models.Model):
     answer = models.TextField()
     classroom_token = models.TextField()
     points = models.IntegerField()
+
+    def last_answers(class_room: str, username : str):
+        print('Username' + str(username))
+        answers = Answer.objects.all().filter(classroom_token=class_room, author_of_answer=username)
+        return answers

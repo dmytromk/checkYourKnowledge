@@ -15,16 +15,17 @@ chatSocket.onopen = function(e) {
 };
 
 function getTask() {
-    console.log('Hello');
+    console.log('getTask');
 
     chatSocket.send(JSON.stringify({
         'command': 'get_task',
         'id': id,
-        'classroom_name': window.roomName
+        'classroom_name': window.roomName,
+        'username': window.userName,
     }));
 };
 chatSocket.onmessage = function(e) {
-    console.log('On message');
+    console.log('Some On message');
     const data = JSON.parse(e.data);
     console.log(data);
 
@@ -50,7 +51,8 @@ chatSocket.onmessage = function(e) {
       p.innerText = "You have already submitted answer";
       document.querySelector('.block').appendChild(p);
     }
-    else {
+    else if(data['type'] === 'create_task'){
+    console.log('solved_task');
      const points = data['points'];
      
     var problem = data['message_problem'];
@@ -58,7 +60,20 @@ chatSocket.onmessage = function(e) {
 
     console.log(problem);
     document.querySelector('#problem').innerText = problem;
-    document.querySelector('#points').innerText = 'Maximum points: ' + points;
+      var bt = document.getElementById('submitBtn');
+       bt.remove();
+      const p = document.createElement('p');
+      p.innerText = "You have already submitted answer";
+      document.querySelector('.block').appendChild(p);
+      let user_ans = data['user_answer'];
+       console.log(data['answer']);
+       console.log(user_ans);
+        if(user_ans===data['answer']){
+       document.querySelector('#points').innerText = points + '/' +  points;
+       }
+        if(user_ans!=data['answer']){
+       document.querySelector('#points').innerText = '0 /'+  points;
+       }
     }
 
 };

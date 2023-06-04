@@ -42,6 +42,7 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
         id = Message_dict['id']
         print('Id:'+str(task_content))
         author = Message_dict['author']
+
         print('SUCCESS')
         await (self.channel_layer.group_send)(
             self.room_group_name,
@@ -49,6 +50,33 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
                 'type': 'send_task',
                 'content_problem': task_content,
                 'content_answer': task_answear,
+                'author': author,
+                'id': id,
+                'points': points,
+                'task_name': task_name
+            }
+        )
+    async def sendTaskWithUserAnswer(self,task):
+        print('poka')
+        Message_dict = task['task']
+
+        task_content = Message_dict['content_problem']
+        task_answear = Message_dict['content_answer']
+        user_answer = Message_dict['user_answer']
+        task_name = Message_dict['task_name']
+        points = Message_dict['points']
+        id = Message_dict['id']
+        print('Id:' + str(task_content))
+        author = Message_dict['author']
+
+        print('SUCCESS')
+        await (self.channel_layer.group_send)(
+            self.room_group_name,
+            {
+                'type': 'send_task_with_answer',
+                'content_problem': task_content,
+                'content_answer': task_answear,
+                'user_answer' : user_answer,
                 'author': author,
                 'id': id,
                 'points': points,
@@ -106,28 +134,7 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
     async def send_chat_message_fetch(self, message):
 
         await self.send(text_data=json.dumps(message))
-    async def send_Task_model(self, task : Task_model):
-        print('send_chat_message')
 
-        task_content = task['content_problem']
-        task_answear = task['content_answer']
-        author = task['author']
-        id = task['id']
-        points = task['points']
-        task_name = task['task_name']
-        print('Hello')
-        await (self.channel_layer.group_send)(
-            self.room_group_name,
-            {
-                'type': 'send_task',
-                'content_problem': task_content,
-                'content_answer': task_answear,
-                'author': author,
-                'id': id,
-                'points': points,
-                'task_name': task_name
-            }
-        )
 
     async def send_task(self,event):
         print('send_task')
@@ -145,6 +152,27 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
             'answer':message_answear,
             'author': author,
 
+            'id': id,
+            'points': points,
+            'task_name': task_name
+        }))
+    async def send_task_with_answer(self,event):
+        print('send_task')
+        message_problem = event['content_problem']
+        message_answear = event['content_answer']
+        task_name = event['task_name']
+        user_answer = event['user_answer']
+        id = event['id']
+
+        print('id' + str(id))
+        points = event['points']
+        author = event['author']
+        await self.send(text_data=json.dumps({
+            'type': 'create_task',
+            'message_problem': message_problem,
+            'answer':message_answear,
+            'author': author,
+            'user_answer': user_answer,
             'id': id,
             'points': points,
             'task_name': task_name

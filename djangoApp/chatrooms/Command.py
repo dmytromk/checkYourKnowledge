@@ -36,15 +36,17 @@ class FetchTasks(Command):
         self.data = data
 
     async def execute(self):
-
+        username = self.data['username']
         class_room = self.data['room_name']
         tasks = Task_model.last_10_tasks(class_room)
+        answers = Answer.last_answers(class_room, username)
         print(len(tasks))
         jsonConverter = JsonConverter.JsonConverterContext(JsonConverter.TaskToJsonConverter())
-
+        answerToJson = JsonConverter.JsonConverterContext(JsonConverter.AnswerToJson())
         content = {
             'command': 'tasks',
-            'tasks': jsonConverter.convert_multiple(tasks)
+            'tasks': jsonConverter.convert_multiple(tasks),
+            'answers': answerToJson.convert_multiple(answers)
         }
 
         await self.consumer.send_chat_message_fetch(content)
@@ -58,22 +60,28 @@ class GetTask(Command):
 
         id = self.data['id']
         classroom = self.data['classroom_name']
-
-        tasks = Task_model.objects.all().filter(content_id=id,classroom_name = classroom)
+        author = self.data['username']
+        tasks = Task_model.objects.all().filter(content_id=id,classroom_name=classroom)
+        answer = Answer.objects.all().filter(task_id = id, classroom_token = classroom, author_of_answer = author)
         l : list[json]
         l = []
-        for task in tasks:
-            l.append({
-            'author': task.author.username,
-            'content_problem': task.content_problem,
-            'content_answer': task.content_answer,
-            'id': task.content_id,
-            'timestamp': str(task.timestamp),
-            'classroom_name': task.classroom_name,
-            'points': task.points,
-            'task_name': task.task_name
-        })
-        await self.consumer.sendTask({ 'task' : l[0]})
+
+        if(len(answer) > 0):
+            for task in tasks:
+                l.append({
+                'type' : 'solved_task',
+                'author': task.author.username,
+                'content_problem': task.content_problem,
+                'content_answer': task.content_answer,
+                'id': task.content_id,
+                'timestamp': str(task.timestamp),
+                'classroom_name': task.classroom_name,
+                'points': task.points,
+                'task_name': task.task_name,
+                'user_answer': answer[0].answer,
+
+            })
+        await self.consumer.sendTaskWithUserAnswer({ 'task' : l[0]})
 
 class NewMessageCommand(Command):
     def __init__(self, consumer, data):
