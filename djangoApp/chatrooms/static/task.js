@@ -51,8 +51,8 @@ chatSocket.onmessage = function(e) {
       p.innerText = "You have already submitted answer";
       document.querySelector('.block').appendChild(p);
     }
-    else if(data['type'] === 'create_task'){
-    console.log('solved_task');
+    else if(data['type'] === 'task_with_answer'){
+    console.log('task_with_answer');
      const points = data['points'];
      
     var problem = data['message_problem'];
@@ -68,14 +68,35 @@ chatSocket.onmessage = function(e) {
       let user_ans = data['user_answer'];
        console.log(data['answer']);
        console.log(user_ans);
-        if(user_ans===data['answer']){
+        if(user_ans===null){
+
+            document.querySelector('#points').innerText = 'Maximum points: ' + points;
+        }
+        else if(user_ans===data['answer']){
        document.querySelector('#points').innerText = points + '/' +  points;
        }
-        if(user_ans!=data['answer']){
+        else if(user_ans!=data['answer']){
        document.querySelector('#points').innerText = '0 /'+  points;
        }
     }
+    else{
+       console.log('not task_with_answer');
+     const points = data['points'];
 
+    var problem = data['message_problem'];
+    ans = data['answer'];
+
+    console.log(problem);
+    document.querySelector('#problem').innerText = problem;
+
+
+      console.log(data['answer']);
+        
+
+     document.querySelector('#points').innerText = 'Maximum points: ' + points;
+       
+     
+    }
 };
 
 function submitAnswer() {

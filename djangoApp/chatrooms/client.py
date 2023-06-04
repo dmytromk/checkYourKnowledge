@@ -168,7 +168,7 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
         points = event['points']
         author = event['author']
         await self.send(text_data=json.dumps({
-            'type': 'create_task',
+            'type': 'task_with_answer',
             'message_problem': message_problem,
             'answer':message_answear,
             'author': author,

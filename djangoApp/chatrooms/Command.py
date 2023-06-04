@@ -81,7 +81,23 @@ class GetTask(Command):
                 'user_answer': answer[0].answer,
 
             })
-        await self.consumer.sendTaskWithUserAnswer({ 'task' : l[0]})
+            await self.consumer.sendTaskWithUserAnswer({'task': l[0]})
+        else:
+            for task in tasks:
+                l.append({
+                    'type': 'solved_task',
+                    'author': task.author.username,
+                    'content_problem': task.content_problem,
+                    'content_answer': task.content_answer,
+                    'id': task.content_id,
+                    'timestamp': str(task.timestamp),
+                    'classroom_name': task.classroom_name,
+                    'points': task.points,
+                    'task_name': task.task_name,
+                    'user_answer': None,
+
+                })
+            await self.consumer.sendTask({ 'task' : l[0]})
 
 class NewMessageCommand(Command):
     def __init__(self, consumer, data):
