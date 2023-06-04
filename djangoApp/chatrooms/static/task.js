@@ -2,50 +2,90 @@ const url = window.location.href;
 var id = url.replace(/\/$/, "").split("/").pop();
 var ans;
 const chatSocket = new WebSocket(
-            'ws://'
-            + window.location.host
-            + '/ws/chat/'
-            +  window.roomName
-            + '/' + id
-        );
-    chatSocket.onopen = function(e){
-            console.log('Hello');
-            getTask();
+    'ws://' +
+    window.location.host +
+    '/ws/chat/' +
+    window.roomName +
+    '/' + id
+);
+chatSocket.onopen = function(e) {
+    console.log('Hello');
+    getTask();
 
-    };
-     function getTask() {
-      console.log('Hello');
+};
 
-     chatSocket.send(JSON.stringify({'command': 'get_task',
-                                     'id': id,
-                                     'classroom_name': window.roomName}));
-    };
-     chatSocket.onmessage = function(e) {
-        console.log('On message');
-         const data = JSON.parse(e.data);
-         console.log(data);
-        var problem = data['message_problem'];
-        ans = data['answer'];
-        const points = data['points'];
-        console.log(problem);
-        document.querySelector('#problem').innerText = problem;
-          document.querySelector('#points').innerText = points;
+function getTask() {
+    console.log('Hello');
 
-        };
-       function submitAnswer() {
-      var answerInput = document.getElementById('answerInput');
-      var resultDiv = document.getElementById('resultDiv');
+    chatSocket.send(JSON.stringify({
+        'command': 'get_task',
+        'id': id,
+        'classroom_name': window.roomName
+    }));
+};
+chatSocket.onmessage = function(e) {
+    console.log('On message');
+    const data = JSON.parse(e.data);
+    console.log(data);
 
-      var userAnswer = answerInput.value;
+    console.log(data['type']);
 
-      if (userAnswer === ans) {
-        resultDiv.textContent = 'Correct answer!';
-        resultDiv.style.color = 'green';
-      } else {
-        resultDiv.textContent = 'Incorrect answer. Please try again.';
-        resultDiv.style.color = 'red';
-      }
-
-      answerInput.value = '';
-
+    if(data['type']==='correct_answer'){
+      console.log('Here');
+     const points = data['points'];
+      document.querySelector('#points').innerText = points + ' / ' +  points;
+      var bt = document.getElementById('submitBtn');
+     bt.remove();
+      const p = document.createElement('p');
+      p.innerText = "You have already submitted answer";
+      document.querySelector('.block').appendChild(p);
     }
+    else if(data['type']==='incorrect_answer'){
+      console.log('Here');
+     const points = data['points'];
+     document.querySelector('#points').innerText = '0 / '+  points;
+      var bt = document.getElementById('submitBtn');
+       bt.remove();
+      const p = document.createElement('p');
+      p.innerText = "You have already submitted answer";
+      document.querySelector('.block').appendChild(p);
+    }
+    else {
+     const points = data['points'];
+     
+    var problem = data['message_problem'];
+    ans = data['answer'];
+
+    console.log(problem);
+    document.querySelector('#problem').innerText = problem;
+    document.querySelector('#points').innerText = 'Maximum points: ' + points;
+    }
+
+};
+
+function submitAnswer() {
+    var answerInput = document.getElementById('answerInput');
+    var resultDiv = document.getElementById('resultDiv');
+
+    var userAnswer = answerInput.value;
+     chatSocket.send(JSON.stringify({
+        'command': 'save_answer',
+        'id': id,
+        'classroom_name': window.roomName,
+        'user_ans': userAnswer,
+        'username': window.userName,
+
+    }));
+    chatSocket.send(JSON.stringify({
+        'command': 'check_answer',
+        'id': id,
+        'classroom_name': window.roomName,
+        'answer_user': userAnswer,
+        'username':  window.userName,
+
+    }));
+
+
+    answerInput.value = '';
+
+}

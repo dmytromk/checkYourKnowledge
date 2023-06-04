@@ -36,6 +36,7 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
 
         task_content = Message_dict['content_problem']
         task_answear = Message_dict['content_answer']
+
         task_name = Message_dict['task_name']
         points = Message_dict['points']
         id = Message_dict['id']
@@ -98,7 +99,7 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
                 'type': 'chat_message',
                 'content': message_content,
                 'author': author,
-                 'fetch': False
+                'fetch': False
             }
         )
 
@@ -134,6 +135,7 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
         message_answear = event['content_answer']
         task_name = event['task_name']
         id = event['id']
+
         print('id' + str(id))
         points = event['points']
         author = event['author']

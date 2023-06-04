@@ -3,6 +3,7 @@ from .Command import *
 class CommandFactory:
     @staticmethod
     def create_command(consumer, command_name, data):
+        print(command_name)
         if command_name == 'fetch':
             return FetchCommand(consumer, data)
         elif command_name == 'new_message':
@@ -11,6 +12,8 @@ class CommandFactory:
             return NewTaskCommand(consumer, data)
         elif command_name == 'check_answer':
             return CheckAnswearCommand(consumer, data)
+        elif command_name == 'save_answer':
+            return SaveAnswearCommand(consumer, data)
         elif command_name == 'get_task':
             return GetTask(consumer, data)
         elif command_name == 'fetch_task':
@@ -18,5 +21,4 @@ class CommandFactory:
         elif command_name == 'generate_invite':
             return GenerateInviteLink(consumer, data)
 
-        # Handle unknown commands or return a default command
         return None

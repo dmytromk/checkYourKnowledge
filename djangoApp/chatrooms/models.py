@@ -49,3 +49,11 @@ class ClassroomUserList(models.Model):
     classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now_add=True)
     role = models.TextField(choices=CLASS_ROLES)
+
+
+class Answer(models.Model):
+    task_id = models.IntegerField()
+    author_of_answer = models.TextField()
+    answer = models.TextField()
+    classroom_token = models.TextField()
+    points = models.IntegerField()

@@ -35,7 +35,8 @@
                                       'answer' : ans,
                                       'classroom_name': roomName,
                                       'points': points,
-                                      'task_name': task_name}));
+                                      'task_name': task_name,
+                                      }));
      showSuccessMessage();
     };
    chatSocket.onmessage = function(e) {

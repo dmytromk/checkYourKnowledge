@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from . import JsonConverter
-from .models import Message, Task_model, Classroom
+from .models import Message, Task_model, Classroom, Answer
 from .Task import Task
 import json
 from datetime import datetime
@@ -152,27 +152,52 @@ class GenerateInviteLink(Command):
             'invite_code': invite_code,
         }))
 
+
 class CheckAnswearCommand(Command):
     def __init__(self, consumer, data):
         self.consumer = consumer
         self.data = data
 
     async def execute(self):
-        print(self.data)
-        answear_user = self.data['message']
-        correct_answear = self.data['answer']
-        author = self.data['author']
+        print('CheckAnswearCommand')
+        answer_user = self.data['answer_user']
 
-        print('correct_answer' + correct_answear)
-        if str(answear_user) == str(correct_answear):
+        author = self.data['username']
+        classroom_token = self.data['classroom_name']
+        task_id = self.data['id']
+
+        answer = Answer.objects.all().filter(task_id=task_id, author_of_answer=author, classroom_token=classroom_token)
+        task = Task_model.objects.all().filter(classroom_name=classroom_token, content_id=task_id)
+
+        if answer[0].answer==task[0].content_answer:
+            print(answer[0].answer + task[0].content_answer)
             await self.consumer.send(text_data=json.dumps({
-                'message': answear_user,
-                'author': author,
-                'type': 'correct_answer'
+                'type': 'correct_answer',
+                'task_id': task_id,
+                'classroom_name': classroom_token,
+                'author_of_answer': author,
+                'points': task[0].points
             }))
         else:
             await self.consumer.send(text_data=json.dumps({
-                'message': answear_user,
-                'author': author,
-                'type': 'incorrect_answer'
+                'type': 'incorrect_answer',
+                'task_id': task_id,
+                'classroom_name': classroom_token,
+                'author_of_answer': author,
+                'points': task[0].points
             }))
+
+class SaveAnswearCommand(Command):
+    def __init__(self, consumer, data):
+        self.consumer = consumer
+        self.data = data
+
+    async def execute(self):
+        print('SaveAnswearCommand')
+        answer_user = self.data['user_ans']
+
+        author = self.data['username']
+        classroom_token = self.data['classroom_name']
+
+        id = self.data['id']
+        answer = Answer.objects.create(author_of_answer=author, answer=answer_user, classroom_token=classroom_token, points=2, task_id=id)

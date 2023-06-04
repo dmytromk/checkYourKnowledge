@@ -88,14 +88,14 @@
         <h2 id="problem">Content Block</h2>
         <input type="file" id="photoInput" accept="image/*">
         <input type="text" id="answerInput" placeholder="Enter your answer">
-        <button onclick="submitAnswer()">Submit Answer</button>
+        <button onclick="submitAnswer()" id="submitBtn">Submit Answer</button>
 
         <div id="resultDiv"></div>
-        <div id="pointsDiv">Points: <span id="points">0</span></div>
+        <div id="pointsDiv"><span id="points">0</span></div>
 
         <script>
             window.roomName = '{{ room_name }}';
-
+            window.userName = {{ username }};
             function submitAnswer() {
                 var photoInput = document.getElementById('photoInput');
                 var file = photoInput.files[0];

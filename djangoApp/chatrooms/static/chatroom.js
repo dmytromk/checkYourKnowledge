@@ -9,6 +9,7 @@ const chatSocket = new WebSocket(
     '/'
 );
 chatSocket.onopen = function(e) {
+
     fetchTasks();
     fetchMessages();
 };
@@ -73,6 +74,7 @@ chatSocket.onmessage = function(e) {
     }
 };
 function createTask(data) {
+    const userAnswer = data['user_ans'];
     const TaskName = data['task_name'];
     const pointsInt = data['points'];
     const id = data['id'];
@@ -80,7 +82,15 @@ function createTask(data) {
     var div = document.createElement('div');
     div.style.backgroundColor = '#3498db';
     div.style.padding = '10px';
+    if(true){
     div.style.color = '#fff';
+}
+else if(user_ans === data['answer']){
+    div.style.color = '#00FF00';
+}
+else if(user_ans != data['answer']){
+    div.style.color = '#FF0000';
+}
     div.style.cursor = 'pointer';
     div.style.margin = '10px 0';
 
@@ -96,7 +106,7 @@ function createTask(data) {
     // Create the points element
     var points = document.createElement('p');
     points.style.margin = '0';
-    points.textContent = 'Points: ' + String(pointsInt); // Replace '10' with the actual points value
+    points.textContent = 'Points: ' + String(pointsInt); 
     div.appendChild(points);
 
     // Add the click event listener
@@ -104,7 +114,7 @@ function createTask(data) {
         window.location.pathname = '/chat/' + roomName + '/' + id + '/';
     });
 
-    // Append the div to the parent element
+  
     var parentElement = document.getElementById('content');
     parentElement.appendChild(div);
 }
