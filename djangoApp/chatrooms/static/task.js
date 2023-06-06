@@ -11,7 +11,7 @@ const chatSocket = new WebSocket(
 chatSocket.onopen = function(e) {
     console.log('Hello');
     getTask();
-    getUsersAnswers();
+   getUsersAnswers();
 
 };
 
@@ -41,7 +41,7 @@ chatSocket.onmessage = function(e) {
     const data = JSON.parse(e.data);
     console.log(data);
 
-    console.log(data);
+   
 
      if (data['type'] === 'task_with_answer') {
         console.log('task_with_answer');
@@ -73,11 +73,9 @@ chatSocket.onmessage = function(e) {
     else if (data['type'] === 'answers') {
 
         console.log('answers');
-        const div = document.createElement('div');
-        for (let i = 0; i < data['answers'].length; i++)
 
-            div.innerText = data['answers'][i]['answer'];
-        document.querySelector('#user_ans').appendChild(div);
+        for (let i = 0; i < data['answers'].length; i++)
+        createUserAnswer(data['answers'][i]);
     } else {
         console.log('not task_with_answer');
         const points = data['points'];
@@ -93,7 +91,11 @@ chatSocket.onmessage = function(e) {
     }
 
 };
-
+function createUserAnswer(data){
+    const div = document.createElement('div');
+    div.innerText =  data['author_of_answer'] + ':' + data['answer'];
+    document.querySelector('#user_ans').appendChild(div);
+}
 function submitAnswer() {
     var answerInput = document.getElementById('answerInput');
     var resultDiv = document.getElementById('resultDiv');

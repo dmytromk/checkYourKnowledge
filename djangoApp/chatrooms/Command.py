@@ -237,6 +237,7 @@ class GetUsersAnswers(Command):
         answers = Answer.objects.all().filter(task_id=id, classroom_token=classroom_token)
         jsonConverter = JsonConverter.JsonConverterContext(JsonConverter.TaskToJsonConverter())
         answerToJson = JsonConverter.JsonConverterContext(JsonConverter.AnswerToJson())
+        print('Len of answers' + str(len(answers)))
         content = {
             'type': 'answers',
             'answers': answerToJson.convert_multiple(answers)
