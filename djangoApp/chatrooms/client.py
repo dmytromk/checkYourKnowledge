@@ -134,7 +134,9 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
     async def send_chat_message_fetch(self, message):
 
         await self.send(text_data=json.dumps(message))
-
+    async def send_user_answers(self,answers):
+        print("send_user_answers")
+        await self.send(text_data=json.dumps(answers))
 
     async def send_task(self,event):
         print('send_task')

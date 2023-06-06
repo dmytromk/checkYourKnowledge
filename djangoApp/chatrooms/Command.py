@@ -231,4 +231,14 @@ class GetUsersAnswers(Command):
         self.data = data
 
     async def execute(self):
-        pass
+        print('GetUsersAnswers')
+        id = self.data['id']
+        classroom_token = self.data['classroom_name']
+        answers = Answer.objects.all().filter(task_id=id, classroom_token=classroom_token)
+        jsonConverter = JsonConverter.JsonConverterContext(JsonConverter.TaskToJsonConverter())
+        answerToJson = JsonConverter.JsonConverterContext(JsonConverter.AnswerToJson())
+        content = {
+            'type': 'answers',
+            'answers': answerToJson.convert_multiple(answers)
+        }
+        await self.consumer.send_user_answers((content))

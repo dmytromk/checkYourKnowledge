@@ -10,9 +10,8 @@ const chatSocket = new WebSocket(
 );
 chatSocket.onopen = function(e) {
     console.log('Hello');
-     getTask();
-     getUsersAnswers();
-
+    getTask();
+    getUsersAnswers();
 
 };
 
@@ -26,6 +25,7 @@ function getTask() {
         'username': window.userName,
     }));
 };
+
 function getUsersAnswers() {
     console.log('getUsersTasks');
 
@@ -41,74 +41,57 @@ chatSocket.onmessage = function(e) {
     const data = JSON.parse(e.data);
     console.log(data);
 
-    console.log(data['type']);
+    console.log(data);
 
-    if(data['type']==='correct_answer'){
-      console.log('Here');
-     const points = data['points'];
-      document.querySelector('#points').innerText = points + ' / ' +  points;
-      var bt = document.getElementById('submitBtn');
-     bt.remove();
-      const p = document.createElement('p');
-      p.innerText = "You have already submitted answer";
-      document.querySelector('.block').appendChild(p);
-    }
-    else if(data['type']==='incorrect_answer'){
-      console.log('Here');
-     const points = data['points'];
-     document.querySelector('#points').innerText = '0 / '+  points;
-      var bt = document.getElementById('submitBtn');
-       bt.remove();
-      const p = document.createElement('p');
-      p.innerText = "You have already submitted answer";
-      document.querySelector('.block').appendChild(p);
-    }
-    else if(data['type'] === 'task_with_answer'){
-    console.log('task_with_answer');
-     const points = data['points'];
-     
-    var problem = data['message_problem'];
-    ans = data['answer'];
+     if (data['type'] === 'task_with_answer') {
+        console.log('task_with_answer');
+        const points = data['points'];
 
-    console.log(problem);
-    document.querySelector('#problem').innerText = problem;
-      var bt = document.getElementById('submitBtn');
-       bt.remove();
-      const p = document.createElement('p');
-      p.innerText = "You have already submitted answer";
-      document.querySelector('.block').appendChild(p);
-      let user_ans = data['user_answer'];
-       console.log(data['answer']);
-       console.log(user_ans);
-        if(user_ans===null){
+        var problem = data['message_problem'];
+        ans = data['answer'];
 
+        console.log(problem);
+        document.querySelector('#problem').innerText = problem;
+        var bt = document.getElementById('submitBtn');
+        bt.remove();
+        const p = document.createElement('p');
+        p.innerText = "You have already submitted answer";
+        document.querySelector('.block').appendChild(p);
+        let user_ans = data['user_answer'];
+        console.log(data['answer']);
+        console.log('User_ans ' + user_ans);
+        if (user_ans === null) {
+            console.log('null');
             document.querySelector('#points').innerText = 'Maximum points: ' + points;
+        } else if (user_ans === data['answer']) {
+          console.log('null');
+            document.querySelector('#points').innerText = points + '/' + points;
+        } else if (user_ans != data['answer']) {
+            document.querySelector('#points').innerText = '0 /' + points;
         }
-        else if(user_ans===data['answer']){
-       document.querySelector('#points').innerText = points + '/' +  points;
-       }
-        else if(user_ans!=data['answer']){
-       document.querySelector('#points').innerText = '0 /'+  points;
-       }
     }
-    else{
-       console.log('not task_with_answer');
-     const points = data['points'];
+    else if (data['type'] === 'answers') {
 
-    var problem = data['message_problem'];
-    ans = data['answer'];
+        console.log('answers');
+        const div = document.createElement('div');
+        for (let i = 0; i < data['answers'].length; i++)
 
-    console.log(problem);
-    document.querySelector('#problem').innerText = problem;
+            div.innerText = data['answers'][i]['answer'];
+        document.querySelector('#user_ans').appendChild(div);
+    } else {
+        console.log('not task_with_answer');
+        const points = data['points'];
 
+        var problem = data['message_problem'];
+        ans = data['answer'];
 
-      console.log(data['answer']);
-        
+        console.log(problem);
+        document.querySelector('#problem').innerText = problem;
+        console.log(data['answer']);
+        document.querySelector('#points').innerText = 'Maximum points: ' + points;
 
-     document.querySelector('#points').innerText = 'Maximum points: ' + points;
-       
-     
     }
+
 };
 
 function submitAnswer() {
@@ -116,7 +99,7 @@ function submitAnswer() {
     var resultDiv = document.getElementById('resultDiv');
 
     var userAnswer = answerInput.value;
-     chatSocket.send(JSON.stringify({
+    chatSocket.send(JSON.stringify({
         'command': 'save_answer',
         'id': id,
         'classroom_name': window.roomName,
@@ -129,7 +112,7 @@ function submitAnswer() {
         'id': id,
         'classroom_name': window.roomName,
         'answer_user': userAnswer,
-        'username':  window.userName,
+        'username': window.userName,
 
     }));
 
