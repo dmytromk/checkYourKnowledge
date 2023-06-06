@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block title %}Create Task{% endblock %}
+{% load static %}
+
+{% block styles %}
+<style>
+    @font-face {
+        font-family: 'CustomFont';
+        src: url('{% static 'fonts/CustomFont.ttf' %}') format('truetype');
+    }
+
+    body {
+        font-family: 'CustomFont', Arial, sans-serif;
+        background-color: #f2f2f2;
+        margin: 0;
+        padding: 20px;
+    }
+       .info-block {
+            background-color: #f0f0f0;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-block h2 {
+            margin-top: 0;
+        }
+
+        .points-div {
+            background-color: #e0e0e0;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .points-div h3 {
+            margin-top: 0;
+        }
+
+        #points {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        #new-points-input {
+            width: 100px;
+            height: 24px;
+            margin-right: 10px;
+        }
+
+        #update-button {
+            padding: 8px 16px;
+            font-size: 16px;
+        }
+
+</style>
+{% endblock %}
+
+{% block content %}
+ <div class="info-block">
+        <h2>Information Block</h2>
+        <p>This is some sample information. You can replace it with your own content.</p>
+    </div>
+
+    <div class="points-div">
+        <h3>Points</h3>
+        <p id="points">0</p>
+        <input type="number" id="new-points-input" min="0" step="1" />
+        <button id="update-button">Update</button>
+    </div>
+
+    <script>
+        // You can update the points dynamically using JavaScript
+        function updatePoints(newPoints) {
+            var pointsElement = document.getElementById("points");
+            pointsElement.innerHTML = newPoints;
+        }
+
+        // Update the points when the Update button is clicked
+        document.getElementById("update-button").addEventListener("click", function() {
+            var newPoints = parseInt(document.getElementById("new-points-input").value);
+            if (!isNaN(newPoints)) {
+                updatePoints(newPoints);
+            }
+        });
+
+        // Example usage: Call the updatePoints function with the new points value
+        updatePoints(50);
+    </script>
+{% endblock %}

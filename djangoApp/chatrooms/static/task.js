@@ -1,5 +1,6 @@
 const url = window.location.href;
 var id = url.replace(/\/$/, "").split("/").pop();
+var roomName = window.roomName;
 var ans;
 const chatSocket = new WebSocket(
     'ws://' +
@@ -75,7 +76,7 @@ chatSocket.onmessage = function(e) {
         console.log('answers');
 
         for (let i = 0; i < data['answers'].length; i++)
-        createUserAnswer(data['answers'][i]);
+            createUserAnswer(data['answers'][i]);
     } else {
         console.log('not task_with_answer');
         const points = data['points'];
@@ -94,6 +95,9 @@ chatSocket.onmessage = function(e) {
 function createUserAnswer(data){
     const div = document.createElement('div');
     div.innerText =  data['author_of_answer'] + ':' + data['answer'];
+    div.addEventListener('click', function() {
+        window.location.pathname = '/chat/' + roomName + '/' + id + '/' + data['author_of_answer'];
+    });
     document.querySelector('#user_ans').appendChild(div);
 }
 function submitAnswer() {

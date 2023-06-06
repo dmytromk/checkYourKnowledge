@@ -44,7 +44,13 @@ def task(request, room_name, task_name):
         'username': mark_safe(json.dumps(request.user.username)),
         'task_name': task_name
     })
-
+def user_answer(request, room_name, task_name,student_name):
+    return render(request, 'user_answer.html', {
+        'room_name': room_name,
+        'username': mark_safe(json.dumps(request.user.username)),
+        'task_name': task_name,
+        'student_name': student_name
+    })
 
 # def join_classroom(request, room_code, ):
 @login_required()
