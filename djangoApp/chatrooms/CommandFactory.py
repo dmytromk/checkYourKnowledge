@@ -11,9 +11,9 @@ class CommandFactory:
         elif command_name == 'new_task':
             return NewTaskCommand(consumer, data)
         elif command_name == 'check_answer':
-            return CheckAnswearCommand(consumer, data)
+            return CheckAnswerCommand(consumer, data)
         elif command_name == 'save_answer':
-            return SaveAnswearCommand(consumer, data)
+            return SaveAnswerCommand(consumer, data)
         elif command_name == 'get_task':
             return GetTask(consumer, data)
         elif command_name == 'fetch_task':
@@ -22,5 +22,6 @@ class CommandFactory:
             return GenerateInviteLink(consumer, data)
         elif command_name == 'get_users_answers':
             return GetUsersAnswers(consumer, data)
-
+        elif command_name == 'change_score':
+            return ChangeScoreCommand(consumer,data)
         return None

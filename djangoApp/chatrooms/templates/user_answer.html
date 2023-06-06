@@ -3,19 +3,15 @@
 {% load static %}
 
 {% block styles %}
-<style>
-    @font-face {
-        font-family: 'CustomFont';
-        src: url('{% static 'fonts/CustomFont.ttf' %}') format('truetype');
-    }
+   <style>
+  body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
 
-    body {
-        font-family: 'CustomFont', Arial, sans-serif;
-        background-color: #f2f2f2;
-        margin: 0;
-        padding: 20px;
-    }
-       .info-block {
+        .info-block {
             background-color: #f0f0f0;
             padding: 20px;
             margin-bottom: 20px;
@@ -55,13 +51,75 @@
             font-size: 16px;
         }
 
-</style>
+        #answers-section {
+            margin-top: 20px;
+        }
+
+        .answer {
+            background-color: #fff;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        #success-message {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 5px;
+            animation: fadeOut 3s;
+        }
+
+        @keyframes fadeOut {
+            0% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            10% {
+                opacity: 1;
+                transform: translateY(-10px);
+            }
+            90% {
+                opacity: 1;
+                transform: translateY(-10px);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+        }
+
+        #points-container {
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+    </style>
 {% endblock %}
 
 {% block content %}
  <div class="info-block">
-        <h2>Information Block</h2>
-        <p>This is some sample information. You can replace it with your own content.</p>
+     <h2 id="problem">Information Block</h2>
+      <div id="answers-section">
+        <h3>Student answer</h3>
+
+    </div>
     </div>
 
     <div class="points-div">
@@ -71,22 +129,18 @@
         <button id="update-button">Update</button>
     </div>
 
+    <div id="success-message">Score has been changed successfully</div>
     <script>
-        // You can update the points dynamically using JavaScript
-        function updatePoints(newPoints) {
-            var pointsElement = document.getElementById("points");
-            pointsElement.innerHTML = newPoints;
-        }
 
-        // Update the points when the Update button is clicked
-        document.getElementById("update-button").addEventListener("click", function() {
-            var newPoints = parseInt(document.getElementById("new-points-input").value);
-            if (!isNaN(newPoints)) {
-                updatePoints(newPoints);
-            }
-        });
+        window.roomName = '{{ room_name }}';
 
-        // Example usage: Call the updatePoints function with the new points value
+        window.studentName = '{{ student_name }}';
+
+        window.taskName = '{{task_name}}';
+
+
+
         updatePoints(50);
     </script>
+<script src="{% static 'user_answer.js' %}"></script>
 {% endblock %}

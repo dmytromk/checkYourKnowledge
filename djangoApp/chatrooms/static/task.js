@@ -43,6 +43,26 @@ chatSocket.onmessage = function(e) {
     console.log(data);
 
    
+    if(data['type']==='correct_answer'){
+      console.log('Here');
+     const points = data['points'];
+      document.querySelector('#points').innerText = points + ' / ' +  points;
+      var bt = document.getElementById('submitBtn');
+     bt.remove();
+      const p = document.createElement('p');
+      p.innerText = "You have already submitted answer";
+      document.querySelector('.block').appendChild(p);
+    }
+    else if(data['type']==='incorrect_answer'){
+      console.log('Here');
+     const points = data['points'];
+     document.querySelector('#points').innerText = '0 / '+  points;
+      var bt = document.getElementById('submitBtn');
+       bt.remove();
+      const p = document.createElement('p');
+      p.innerText = "You have already submitted answer";
+      document.querySelector('.block').appendChild(p);
+    }
 
      if (data['type'] === 'task_with_answer') {
         console.log('task_with_answer');
@@ -64,12 +84,11 @@ chatSocket.onmessage = function(e) {
         if (user_ans === null) {
             console.log('null');
             document.querySelector('#points').innerText = 'Maximum points: ' + points;
-        } else if (user_ans === data['answer']) {
-          console.log('null');
-            document.querySelector('#points').innerText = points + '/' + points;
-        } else if (user_ans != data['answer']) {
-            document.querySelector('#points').innerText = '0 /' + points;
         }
+           else{
+           document.querySelector('#points').innerText = data['user_points'] + '/' + data['max_points'];
+           }
+
     }
     else if (data['type'] === 'answers') {
 

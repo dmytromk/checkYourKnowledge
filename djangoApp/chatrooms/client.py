@@ -64,7 +64,8 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
         task_answear = Message_dict['content_answer']
         user_answer = Message_dict['user_answer']
         task_name = Message_dict['task_name']
-        points = Message_dict['points']
+        max_points = Message_dict['max_points']
+        user_points = Message_dict['user_points']
         id = Message_dict['id']
         print('Id:' + str(task_content))
         author = Message_dict['author']
@@ -79,7 +80,8 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
                 'user_answer' : user_answer,
                 'author': author,
                 'id': id,
-                'points': points,
+                'max_points': max_points,
+                'user_points': user_points,
                 'task_name': task_name
             }
         )
@@ -167,7 +169,8 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
         id = event['id']
 
         print('id' + str(id))
-        points = event['points']
+        user_points = event['user_points']
+        max_points = event['max_points']
         author = event['author']
         await self.send(text_data=json.dumps({
             'type': 'task_with_answer',
@@ -176,7 +179,8 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
             'author': author,
             'user_answer': user_answer,
             'id': id,
-            'points': points,
+            'user_points': user_points,
+            'max_points': max_points,
             'task_name': task_name
         }))
     async def chat_message(self, event):

@@ -7,6 +7,7 @@ from datetime import datetime
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
+
 class Command(ABC):
     @abstractmethod
     async def execute(self):
@@ -30,6 +31,7 @@ class FetchCommand(Command):
 
         await self.consumer.send_chat_message_fetch(content)
 
+
 class FetchTasks(Command):
     def __init__(self, consumer, data):
         self.consumer = consumer
@@ -51,6 +53,7 @@ class FetchTasks(Command):
 
         await self.consumer.send_chat_message_fetch(content)
 
+
 class GetTask(Command):
     def __init__(self, consumer, data):
         self.consumer = consumer
@@ -65,7 +68,7 @@ class GetTask(Command):
         answer = Answer.objects.all().filter(task_id = id, classroom_token = classroom, author_of_answer = author)
         l : list[json]
         l = []
-
+        print(len(answer))
         if(len(answer) > 0):
             for task in tasks:
                 l.append({
@@ -76,7 +79,8 @@ class GetTask(Command):
                 'id': task.content_id,
                 'timestamp': str(task.timestamp),
                 'classroom_name': task.classroom_name,
-                'points': task.points,
+                'user_points': answer[0].points,
+                'max_points': task.points,
                 'task_name': task.task_name,
                 'user_answer': answer[0].answer,
 
@@ -98,6 +102,7 @@ class GetTask(Command):
 
                 })
             await self.consumer.sendTask({ 'task' : l[0]})
+
 
 class NewMessageCommand(Command):
     def __init__(self, consumer, data):
@@ -122,6 +127,7 @@ class NewMessageCommand(Command):
         }
         print(content)
         await self.consumer.send_chat_message(content)
+
 
 class NewTaskCommand(Command):
     def __init__(self, consumer, data):
@@ -162,6 +168,7 @@ class NewTaskCommand(Command):
         }
         await self.consumer.sendTask(content)
 
+
 class GenerateInviteLink(Command):
     def __init__(self, consumer, data):
         self.consumer = consumer
@@ -177,7 +184,7 @@ class GenerateInviteLink(Command):
         }))
 
 
-class CheckAnswearCommand(Command):
+class CheckAnswerCommand(Command):
     def __init__(self, consumer, data):
         self.consumer = consumer
         self.data = data
@@ -195,23 +202,28 @@ class CheckAnswearCommand(Command):
 
         if answer[0].answer==task[0].content_answer:
             print(answer[0].answer + task[0].content_answer)
+            Answer.objects.all().filter(task_id=task_id, author_of_answer=author, classroom_token=classroom_token).update(points = task[0].points)
+
             await self.consumer.send(text_data=json.dumps({
                 'type': 'correct_answer',
                 'task_id': task_id,
                 'classroom_name': classroom_token,
                 'author_of_answer': author,
-                'points': task[0].points
+                'points': answer[0].points
             }))
         else:
+            Answer.objects.all().filter(task_id=task_id, author_of_answer=author,
+                                        classroom_token=classroom_token).update(points=0)
             await self.consumer.send(text_data=json.dumps({
                 'type': 'incorrect_answer',
                 'task_id': task_id,
                 'classroom_name': classroom_token,
                 'author_of_answer': author,
-                'points': task[0].points
+                'points': answer[0].points
             }))
 
-class SaveAnswearCommand(Command):
+
+class SaveAnswerCommand(Command):
     def __init__(self, consumer, data):
         self.consumer = consumer
         self.data = data
@@ -224,7 +236,9 @@ class SaveAnswearCommand(Command):
         classroom_token = self.data['classroom_name']
 
         id = self.data['id']
-        answer = Answer.objects.create(author_of_answer=author, answer=answer_user, classroom_token=classroom_token, points=2, task_id=id)
+        answer = Answer.objects.create(author_of_answer=author, answer=answer_user, classroom_token=classroom_token, points=0, task_id=id)
+
+
 class GetUsersAnswers(Command):
     def __init__(self, consumer, data):
         self.consumer = consumer
@@ -243,3 +257,17 @@ class GetUsersAnswers(Command):
             'answers': answerToJson.convert_multiple(answers)
         }
         await self.consumer.send_user_answers((content))
+
+
+class ChangeScoreCommand(Command):
+    def __init__(self, consumer, data):
+        self.consumer = consumer
+        self.data = data
+
+    async def execute(self):
+        print('ChangeScoreCommand')
+        id = self.data['id']
+        classroom_token = self.data['classroom_name']
+        username = self.data['username']
+        new_points = self.data['points']
+        Answer.objects.all().filter(task_id=id, classroom_token=classroom_token, author_of_answer = username).update(points=new_points)
