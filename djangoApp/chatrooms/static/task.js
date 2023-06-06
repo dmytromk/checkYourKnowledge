@@ -40,11 +40,11 @@ function getUsersAnswers() {
 chatSocket.onmessage = function(e) {
     console.log('Some On message');
     const data = JSON.parse(e.data);
-    console.log(data);
+    console.log(data['type']);
 
    
-    if(data['type']==='correct_answer'){
-      console.log('Here');
+    if(data['type']==="correct_answer"){
+      console.log('correct_answer');
      const points = data['points'];
       document.querySelector('#points').innerText = points + ' / ' +  points;
       var bt = document.getElementById('submitBtn');
@@ -53,9 +53,9 @@ chatSocket.onmessage = function(e) {
       p.innerText = "You have already submitted answer";
       document.querySelector('.block').appendChild(p);
     }
-    else if(data['type']==='incorrect_answer'){
-      console.log('Here');
-     const points = data['points'];
+    else if(data['type']==="incorrect_answer"){
+      console.log('incorrect_answer');
+     const points = data['max_points'];
      document.querySelector('#points').innerText = '0 / '+  points;
       var bt = document.getElementById('submitBtn');
        bt.remove();
@@ -64,7 +64,7 @@ chatSocket.onmessage = function(e) {
       document.querySelector('.block').appendChild(p);
     }
 
-     if (data['type'] === 'task_with_answer') {
+     else if (data['type'] === 'task_with_answer') {
         console.log('task_with_answer');
         const points = data['points'];
 
