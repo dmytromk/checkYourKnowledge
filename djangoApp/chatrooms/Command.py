@@ -225,3 +225,10 @@ class SaveAnswearCommand(Command):
 
         id = self.data['id']
         answer = Answer.objects.create(author_of_answer=author, answer=answer_user, classroom_token=classroom_token, points=2, task_id=id)
+class GetUsersAnswers(Command):
+    def __init__(self, consumer, data):
+        self.consumer = consumer
+        self.data = data
+
+    async def execute(self):
+        pass

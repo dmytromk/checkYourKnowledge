@@ -10,7 +10,9 @@ const chatSocket = new WebSocket(
 );
 chatSocket.onopen = function(e) {
     console.log('Hello');
-    getTask();
+     getTask();
+     getUsersAnswers();
+
 
 };
 
@@ -22,6 +24,16 @@ function getTask() {
         'id': id,
         'classroom_name': window.roomName,
         'username': window.userName,
+    }));
+};
+function getUsersAnswers() {
+    console.log('getUsersTasks');
+
+    chatSocket.send(JSON.stringify({
+        'command': 'get_users_answers',
+        'id': id,
+        'classroom_name': window.roomName,
+
     }));
 };
 chatSocket.onmessage = function(e) {

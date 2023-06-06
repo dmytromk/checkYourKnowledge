@@ -20,5 +20,7 @@ class CommandFactory:
             return FetchTasks(consumer, data)
         elif command_name == 'generate_invite':
             return GenerateInviteLink(consumer, data)
+        elif command_name == 'get_users_answers':
+            return GetUsersAnswers(consumer, data)
 
         return None
