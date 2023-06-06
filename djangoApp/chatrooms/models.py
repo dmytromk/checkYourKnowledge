@@ -9,6 +9,7 @@ class Message(models.Model):
     content = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
     classroom_name = models.TextField()
+    avatar_link = models.TextField()
     def last_10_messages(classroom_name):
         messages = Message.objects.all().filter(classroom_name=classroom_name)
         return messages.order_by('timestamp').all()

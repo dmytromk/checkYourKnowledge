@@ -110,9 +110,10 @@ class NewMessageCommand(Command):
         message_ = self.data['message']
         classroom = self.data['classroom_name']
         user = User.objects.get(username=author)
+        avatar_link = user.avatar_link
         dt = datetime.now()
         ts = datetime.timestamp(dt)
-        message = Message.objects.create(author=user, content=message_,classroom_name = classroom)
+        message = Message.objects.create(author=user, content=message_,classroom_name = classroom, avatar_link = avatar_link)
         message.save()
         jsonConverter = JsonConverter.JsonConverterContext(JsonConverter.MessageToJsonConverter())
 

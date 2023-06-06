@@ -87,15 +87,15 @@ function createTask(tasks,answers) {
     console.log(tasks);
 
     if(answers === undefined){
-    div.style.backgroundColor = '#3498db';
-}
+        div.style.backgroundColor = '#3498db';
+    }
 
-else if(answers['answer'] === tasks['content_answer']){
-    div.style.backgroundColor = '#00FF00';
-}
-else if(answers['answer'] != tasks['content_answer']){
-    div.style.backgroundColor = '#FF0000';
-}
+    else if(answers['answer'] === tasks['content_answer']){
+        div.style.backgroundColor = '#00FF00';
+    }
+    else if(answers['answer'] != tasks['content_answer']){
+        div.style.backgroundColor = '#FF0000';
+    }
     div.style.cursor = 'pointer';
     div.style.margin = '10px 0';
 
@@ -111,7 +111,7 @@ else if(answers['answer'] != tasks['content_answer']){
     // Create the points element
     var points = document.createElement('p');
     points.style.margin = '0';
-    points.textContent = 'Points: ' + String(pointsInt); 
+    points.textContent = 'Points: ' + String(pointsInt);
     div.appendChild(points);
 
     // Add the click event listener
@@ -119,7 +119,7 @@ else if(answers['answer'] != tasks['content_answer']){
         window.location.pathname = '/chat/' + roomName + '/' + id + '/';
     });
 
-  
+
     var parentElement = document.getElementById('content');
     parentElement.appendChild(div);
 }
@@ -133,7 +133,11 @@ function createMessage(data) {
 
     const avatarElement = document.createElement('img');
     avatarElement.classList.add('message-avatar');
-    avatarElement.src = 'https://images.unsplash.com/photo-1508341591423-4347099e1f19?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8bWVufGVufDB8fDB8fHww&w=1000&q=80';
+    avatarElement.onload = function() {
+        chatMessages.appendChild(messageElement);
+    };
+    avatarElement.src = data['avatar_link']
+
     messageElement.appendChild(avatarElement);
 
     const messageContentElement = document.createElement('div');
