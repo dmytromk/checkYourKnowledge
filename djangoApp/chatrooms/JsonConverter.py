@@ -10,7 +10,7 @@ class MessageToJsonConverter(ObjectToJsonConverter):
             'content': message.content,
             'timestamp': str(message.timestamp),
             'class_room': message.classroom_name,
-            'avatar_link' : message.avatar_link,
+            'avatar_link' : message.author.avatar_link,
         }
 
     def convert_multiple(self, messages: list[json]):
