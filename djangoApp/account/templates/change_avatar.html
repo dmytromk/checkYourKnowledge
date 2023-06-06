@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% block title %}
+    <h1>Choose your avatar</h1>
+{% endblock %}
+{% block styles %}
+    <style>
+        .avatar-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 0px;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        .avatar-circle {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background-color: #f2f2f2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .avatar-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center center;
+        }
+
+        .placeholder {
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            border-radius: 50%;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        .success-message {
+            background-color: #5cb85c;
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .success-message.show {
+            opacity: 1;
+        }
+
+    </style>
+{% endblock %}
+{% block content %}
+    {% if messages %}
+        <div class="success-message">
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
+    {% endif %}
+    <div class="avatar-container">
+        <h2>Change Avatar</h2>
+        <div class="avatar-circle">
+            {% if avatar_url %}
+                <img src="{{ avatar_url }}" alt="Avatar">
+            {% else %}
+                <div class="placeholder"></div>
+            {% endif %}
+        </div>
+        <form method="post" id="avatar-form">
+            {% csrf_token %}
+            {{ form.avatar_link.label_tag }}
+            {{ form.avatar_link }}
+            {% if form.avatar_link.errors %}
+                <div class="error-message">
+                    <hr>
+                    {{ form.avatar_link.errors.as_text }}
+                </div>
+            {% endif %}
+            <button type="submit">Save</button>
+        </form>
+    </div>
+
+    <script>
+        // Instantly update the avatar image when a new link is added
+        document.querySelector('#id_avatar_link').addEventListener('input', function() {
+            var image = document.querySelector('.avatar-circle img');
+            var placeholder = document.querySelector('.avatar-circle .placeholder');
+            var avatarUrl = this.value;
+
+            if (image) {
+                image.src = avatarUrl;
+            } else {
+                placeholder.style.backgroundImage = 'url(' + avatarUrl + ')';
+            }
+        });
+        var successMessage = document.querySelector('.success-message');
+        if (successMessage) {
+            successMessage.classList.add('show');
+            setTimeout(function() {
+                successMessage.remove();
+            }, 5000); // Remove the message after 5 seconds (adjust the delay as needed)
+        }
+    </script>
+{% endblock %}

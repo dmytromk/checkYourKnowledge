@@ -142,3 +142,25 @@ def change_param(request, change_function, template_file, *args):
     else:
         form = change_function(instance=request.user)
     return render(request, template_file, {'form': form})
+
+
+@login_required
+def change_avatar(request):
+    user = request.user
+
+    if request.method == 'POST':
+        form = ChangeAvatarForm(request.POST, instance=user)
+        if form.is_valid():
+            avatar_url = form.cleaned_data['avatar_link']
+            user.avatar_link = avatar_url
+            user.save()
+            messages.success(request, 'Avatar updated successfully')
+            return redirect('/account/change_avatar')
+        else:
+            form.add_error('avatar_link', 'Please enter a valid avatar link !')
+    else:
+        form = ChangeAvatarForm(instance=user)
+
+    avatar_url = user.avatar_link if user.avatar_link else None
+
+    return render(request, 'change_avatar.html', {'form': form, 'avatar_url': avatar_url})

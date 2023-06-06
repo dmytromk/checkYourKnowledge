@@ -116,7 +116,7 @@
 <div id="header">
     {% if request.user.is_authenticated %}
         <span class="user-info">
-            <img src="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg" alt="User Avatar" onclick="toggleUserDetails()">
+            <img src="{{ request.user.avatar_link }}" alt="User Avatar" onclick="toggleUserDetails()">
         </span>
         <div class="user-details" id="userDetails">
             <p>Full Name: {{ request.user.first_name }} {{ request.user.last_name }}</p>

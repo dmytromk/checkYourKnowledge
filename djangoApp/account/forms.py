@@ -1,8 +1,9 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm, UserChangeForm, \
     PasswordResetForm as DjangoPasswordResetForm
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 
+User = get_user_model()
 
 class BaseCleanedEmailClass:
     def clean_email(self):
@@ -105,3 +106,11 @@ class PasswordResetForm(DjangoPasswordResetForm):
         if not User.objects.filter(email=email).exists():
             raise forms.ValidationError("Email does not exist.")
         return email
+
+
+class ChangeAvatarForm(forms.ModelForm):
+    avatar_link = forms.URLField(widget=forms.URLInput(attrs={'class': 'form-control'}))
+
+    class Meta:
+        model = User
+        fields = ['avatar_link']
