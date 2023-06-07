@@ -20,6 +20,7 @@ urlpatterns = [
     path('change_email/', views.change_email, name='change_email'),
     path('change_username/', views.change_username, name='change_username'),
     path('change_realname/', views.change_realname, name='change_realname'),
+    path('change_avatar/', views.change_avatar, name='change_avatar'),
     path('settings/', views.settings, name='settings'),
     path('password-reset/', views.CustomPasswordResetView.as_view(),name='password-reset'),
     path('password-reset/done/', PasswordResetDoneView.as_view(template_name='password_reset_done.html'), name='password_reset_done'),

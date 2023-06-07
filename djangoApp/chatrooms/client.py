@@ -107,13 +107,15 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
         author = text_data_json['author']
+        avatar_link = text_data_json['avatar_link']
 
         await (self.channel_layer.group_send)(
             self.room_group_name,
             {
                 'type': 'chatroom_message',
                 'message': message,
-                'author' : author
+                'author' : author,
+                'avatar_link' : avatar_link
             }
         )
 
@@ -123,12 +125,14 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
 
         message_content = Message_dict['content']
         author = Message_dict['author']
+        avatar_link = Message_dict['avatar_link']
         await(self.channel_layer.group_send)(
             self.room_group_name,
             {
                 'type': 'chat_message',
                 'content': message_content,
                 'author': author,
+                'avatar_link' : avatar_link,
                 'fetch': False
             }
         )
@@ -187,11 +191,13 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
         message = event['content']
         author = event['author']
         is_fetch = event['fetch']
+        avatar_link = event['avatar_link']
 
         await self.send(text_data=json.dumps({
             'type': 'chat_message',
             'content': message,
             'author': author,
+            'avatar_link': avatar_link,
             'fetch': is_fetch
         }))
     pass
