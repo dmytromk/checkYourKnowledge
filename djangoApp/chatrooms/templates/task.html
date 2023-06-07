@@ -3,120 +3,201 @@
 {% load static %}
 
 {% block styles %}
-    <style>
-        @font-face {
-            font-family: 'CustomFont';
-            src: url('{% static 'fonts/CustomFont.ttf' %}') format('truetype');
+<style>
+    @font-face {
+        font-family: 'CustomFont';
+        src: url('{% static 'fonts/CustomFont.ttf' %}') format('truetype');
+    }
+
+    body {
+        font-family: 'CustomFont', Arial, sans-serif;
+        background-color: #f2f2f2;
+        margin: 0;
+        padding: 20px;
+    }
+
+    .block {
+        background-color: #fff;
+        padding: 20px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        text-align: left;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        margin-top: 0;
+        font-size: 24px;
+    }
+
+    #photoInput {
+        margin-bottom: 10px;
+        padding: 10px;
+        border: 2px dashed #ccc;
+        border-radius: 5px;
+        font-size: 14px;
+        background-color: #f9f9f9;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    #answerInput {
+        margin-bottom: 10px;
+        padding: 10px;
+        width: 100%;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 14px;
+    }
+
+    button {
+        padding: 10px 20px;
+        background-color: #4CAF50;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+        font-size: 14px;
+        transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+        background-color: #45a049;
+    }
+
+    #resultDiv {
+        margin-top: 20px;
+    }
+
+    #pointsDiv {
+        position: relative;
+        display: inline-block;
+        font-size: 18px;
+        color: #555;
+        margin-top: 10px;
+    }
+
+    img {
+        max-width: 100%;
+        height: auto;
+        margin-top: 10px;
+    }
+
+    /* Additional Styles */
+    .block label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    .block #photoInput:hover {
+        background-color: #f0f0f0;
+    }
+
+    .block #photoInput.dragover {
+        border-color: #4CAF50;
+        background-color: #f9f9f9;
+    }
+
+    .block #photoInput .upload-text {
+        margin-top: 20px;
+    }
+
+    .block #photoInput .upload-icon {
+        font-size: 36px;
+        margin-bottom: 10px;
+    }
+
+    /* Positioning Styles */
+    @media (min-width: 768px) {
+        .block .row {
+            display: flex;
+            align-items: flex-start;
         }
 
-        body {
-            font-family: 'CustomFont', Arial, sans-serif;
-            background-color: #f2f2f2;
-            margin: 0;
-            padding: 20px;
+        .block .col-md-6 {
+            flex: 0 0 50%;
+            max-width: 50%;
         }
 
-        .block {
-            background-color: #fff;
-            padding: 20px;
-            margin-bottom: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            text-align: left;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        .block .col-md-6.right {
+            text-align: right;
         }
-
-        h2 {
-            margin-top: 0;
-            font-size: 24px;
-        }
-
-        #photoInput {
-            margin-bottom: 10px;
-            display: block;
-            float: left; /* Added */
-        }
-
-        #answerInput {
-            margin-bottom: 10px;
-            padding: 10px;
-            width: 100%;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-
-        button {
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: #fff;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-            font-size: 14px;
-            transition: background-color 0.3s ease;
-        }
-
-        button:hover {
-            background-color: #45a049;
-        }
-
-        #resultDiv {
-            margin-top: 20px;
-        }
-
-        #pointsDiv {
-            position: relative; /* Changed to relative positioning */
-            display: inline-block; /* Added */
-            font-size: 18px;
-            color: #555;
-            margin-top: 10px; /* Adjusted margin-top */
-        }
-
-        img {
-            max-width: 100%;
-            height: auto;
-            margin-top: 10px;
-        }
-
-    </style>
+    }
+</style>
 {% endblock %}
 
 {% block content %}
-    <div class="block">
-        <h2 id="problem">Content Block</h2>
-        <input type="file" id="photoInput" accept="image/*">
-        <input type="text" id="answerInput" placeholder="Enter your answer">
-        <button onclick="submitAnswer()">Submit Answer</button>
-
-        <div id="resultDiv"></div>
-        <div id="pointsDiv">Points: <span id="points">0</span></div>
-
-        <script>
-            window.roomName = '{{ room_name }}';
-
-            function submitAnswer() {
-                var photoInput = document.getElementById('photoInput');
-                var file = photoInput.files[0];
-                if (file) {
-                    uploadPhoto(file);
-                } else {
-                    alert('Please select a photo to upload.');
-                }
-            }
-
-            function uploadPhoto(file) {
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    var resultDiv = document.getElementById('resultDiv');
-                    var img = document.createElement('img');
-                    img.src = e.target.result;
-                    resultDiv.appendChild(img);
-                };
-                reader.readAsDataURL(file);
-            }
-        </script>
-        <script src="{% static 'task.js' %}"></script>
+<div class="block">
+    <h2 id="problem">Content Block</h2>
+    <div class="row">
+        <div class="col-md-6">
+            <input type="file" id="photoInput" accept="image/*">
+        </div>
+        <div class="col-md-6 right">
+            <button onclick="submitAnswer()" id="submitBtn">Submit Answer</button>
+        </div>
     </div>
+    <input type="text" id="answerInput" placeholder="Enter your answer">
+
+    <div id="resultDiv"></div>
+    <div id="pointsDiv"><span id="points">0</span></div>
+    <div id="user_ans"></div>
+    <script>
+        window.roomName = '{{ room_name }}';
+        window.userName = {{ username }};
+        window.isTeacher = '{{is_owner}}';
+        console.log(window.isTeacher);
+        function submitAnswer() {
+            var photoInput = document.getElementById('photoInput');
+            var file = photoInput.files[0];
+            if (file) {
+                uploadPhoto(file);
+            } else {
+                alert('Please select a file to upload.');
+            }
+        }
+
+        function uploadPhoto(file) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var resultDiv = document.getElementById('resultDiv');
+                var img = document.createElement('img');
+                img.src = e.target.result;
+                resultDiv.appendChild(img);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Drag and Drop Events
+        var photoInput = document.getElementById('photoInput');
+        photoInput.addEventListener('dragover', handleDragOver, false);
+        photoInput.addEventListener('dragleave', handleDragLeave, false);
+        photoInput.addEventListener('drop', handleDrop, false);
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            photoInput.classList.add('dragover');
+        }
+
+        function handleDragLeave(e) {
+            e.preventDefault();
+            photoInput.classList.remove('dragover');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            photoInput.classList.remove('dragover');
+            var file = e.dataTransfer.files[0];
+            if (file) {
+                uploadPhoto(file);
+            } else {
+                alert('Please select a file to upload.');
+            }
+        }
+    </script>
+    <script src="{% static 'task.js' %}"></script>
+</div>
 {% endblock %}

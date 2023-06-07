@@ -9,6 +9,7 @@ const chatSocket = new WebSocket(
     '/'
 );
 chatSocket.onopen = function(e) {
+
     fetchTasks();
     fetchMessages();
 };
@@ -26,7 +27,8 @@ function fetchTasks() {
     console.log('fetchTasks');
     chatSocket.send(JSON.stringify({
         'command': 'fetch_task',
-        'room_name': roomName
+        'room_name': roomName,
+        'username': username
     }));
 
 
@@ -53,7 +55,7 @@ chatSocket.onmessage = function(e) {
         chatMessages.innerHTML="";
         for (let i=0; i<data['tasks'].length; i++) {
             console.log(data['tasks'][i]);
-            createTask(data['tasks'][i]);
+            createTask(data['tasks'][i],data['answers'][i]);
         }
 
     }
@@ -63,7 +65,7 @@ chatSocket.onmessage = function(e) {
     }
 
     else if (data['type'] === 'create_task') {
-        createTask(data);
+        createTask(data,undefined);
     }
 
     else if(data['type'] === 'code_generation'){
@@ -72,15 +74,28 @@ chatSocket.onmessage = function(e) {
         field.value = invite_code;
     }
 };
-function createTask(data) {
-    const TaskName = data['task_name'];
-    const pointsInt = data['points'];
-    const id = data['id'];
+function createTask(tasks,answers) {
+    const userAnswer = tasks['user_ans'];
+    const TaskName = tasks['task_name'];
+    const pointsInt = tasks['points'];
+    const id = tasks['id'];
 
     var div = document.createElement('div');
+    div.style.color = "#fff"
     div.style.backgroundColor = '#3498db';
     div.style.padding = '10px';
-    div.style.color = '#fff';
+    console.log(tasks);
+
+    if(answers === undefined){
+        div.style.backgroundColor = '#3498db';
+    }
+
+    else if(answers['answer'] === tasks['content_answer']){
+        div.style.backgroundColor = '#00FF00';
+    }
+    else if(answers['answer'] != tasks['content_answer']){
+        div.style.backgroundColor = '#FF0000';
+    }
     div.style.cursor = 'pointer';
     div.style.margin = '10px 0';
 
@@ -96,7 +111,7 @@ function createTask(data) {
     // Create the points element
     var points = document.createElement('p');
     points.style.margin = '0';
-    points.textContent = 'Points: ' + String(pointsInt); // Replace '10' with the actual points value
+    points.textContent = 'Points: ' + String(pointsInt);
     div.appendChild(points);
 
     // Add the click event listener
@@ -104,7 +119,7 @@ function createTask(data) {
         window.location.pathname = '/chat/' + roomName + '/' + id + '/';
     });
 
-    // Append the div to the parent element
+
     var parentElement = document.getElementById('content');
     parentElement.appendChild(div);
 }
@@ -118,7 +133,11 @@ function createMessage(data) {
 
     const avatarElement = document.createElement('img');
     avatarElement.classList.add('message-avatar');
-    avatarElement.src = 'https://images.unsplash.com/photo-1508341591423-4347099e1f19?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8bWVufGVufDB8fDB8fHww&w=1000&q=80';
+    avatarElement.onload = function() {
+        chatMessages.appendChild(messageElement);
+    };
+    avatarElement.src = data['avatar_link']
+
     messageElement.appendChild(avatarElement);
 
     const messageContentElement = document.createElement('div');

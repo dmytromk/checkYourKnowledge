@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% block title %}Create Task{% endblock %}
+{% load static %}
+
+{% block styles %}
+   <style>
+  body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+
+        .info-block {
+            background-color: #f0f0f0;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-block h2 {
+            margin-top: 0;
+        }
+
+        .points-div {
+            background-color: #e0e0e0;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .points-div h3 {
+            margin-top: 0;
+        }
+
+        #points {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        #new-points-input {
+            width: 100px;
+            height: 24px;
+            margin-right: 10px;
+        }
+
+        #update-button {
+            padding: 8px 16px;
+            font-size: 16px;
+        }
+
+        #answers-section {
+            margin-top: 20px;
+        }
+
+        .answer {
+            background-color: #fff;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        #success-message {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 5px;
+            animation: fadeOut 3s;
+        }
+
+        @keyframes fadeOut {
+            0% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            10% {
+                opacity: 1;
+                transform: translateY(-10px);
+            }
+            90% {
+                opacity: 1;
+                transform: translateY(-10px);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+        }
+
+        #points-container {
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+ <div class="info-block">
+     <h2 id="problem">Information Block</h2>
+      <div id="answers-section">
+        <h3>Student answer</h3>
+
+    </div>
+    </div>
+
+    <div class="points-div">
+        <h3>Points</h3>
+        <p id="points">0</p>
+        <input type="number" id="new-points-input" min="0" step="1" />
+        <button id="update-button">Update</button>
+    </div>
+
+    <div id="success-message">Score has been changed successfully</div>
+    <script>
+
+        window.roomName = '{{ room_name }}';
+
+        window.studentName = '{{ student_name }}';
+
+        window.taskName = '{{task_name}}';
+
+
+
+        updatePoints(50);
+    </script>
+<script src="{% static 'user_answer.js' %}"></script>
+{% endblock %}

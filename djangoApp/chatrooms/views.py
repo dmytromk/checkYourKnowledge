@@ -19,6 +19,9 @@ def home(request):
 
 @login_required
 def room(request, room_name):
+    classroomlist = [x.classroom for x in ClassroomUserList.objects.filter(user=request.user)]
+    jsonConverter = JsonConverter.JsonConverterContext(JsonConverter.ClassroomToJson())
+    classrooms = jsonConverter.convert_multiple(classroomlist)
     classroom = Classroom.objects.get(token=room_name)
     is_owner = (classroom.owner == request.user)
 
@@ -27,6 +30,7 @@ def room(request, room_name):
         'username': mark_safe(json.dumps(request.user.username)),
         'classroom': classroom,
         'is_owner': is_owner,
+        'classroomlist': classrooms,
     })
 
 
@@ -39,12 +43,21 @@ def createtask(request, room_name):
 
 
 def task(request, room_name, task_name):
+    classroom = Classroom.objects.get(token=room_name)
+    is_owner = (classroom.owner == request.user)
     return render(request, 'task.html', {
         'room_name': room_name,
         'username': mark_safe(json.dumps(request.user.username)),
-        'task_name': task_name
+        'task_name': task_name,
+        'is_owner': is_owner
     })
-
+def user_answer(request, room_name, task_name,student_name):
+    return render(request, 'user_answer.html', {
+        'room_name': room_name,
+        'username': mark_safe(json.dumps(request.user.username)),
+        'task_name': task_name,
+        'student_name': student_name
+    })
 
 # def join_classroom(request, room_code, ):
 @login_required()

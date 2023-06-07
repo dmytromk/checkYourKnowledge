@@ -9,7 +9,8 @@ class MessageToJsonConverter(ObjectToJsonConverter):
             'author': message.author.username,
             'content': message.content,
             'timestamp': str(message.timestamp),
-            'class_room': message.classroom_name
+            'class_room': message.classroom_name,
+            'avatar_link' : message.author.avatar_link,
         }
 
     def convert_multiple(self, messages: list[json]):
@@ -53,7 +54,22 @@ class ClassroomToJson(ObjectToJsonConverter):
         for classroom in classrooms:
             result.append(self.convert_single(classroom))
         return result
+class AnswerToJson(ObjectToJsonConverter):
+    def convert_single(self, answer):
 
+        return {
+            'task_id': answer.task_id,
+            'author_of_answer': answer.author_of_answer,
+            'answer':answer.answer,
+            'classroom_token':answer.classroom_token,
+            'points':answer.points,
+        }
+
+    def convert_multiple(self, anwers):
+        result = []
+        for answer in anwers:
+            result.append(self.convert_single(answer))
+        return result
 
 class JsonConverterContext:
     def __init__(self, converter):
