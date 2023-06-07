@@ -8,6 +8,7 @@ const chatSocket = new WebSocket(
     roomName +
     '/'
 );
+
 chatSocket.onopen = function(e) {
 
     fetchTasks();
