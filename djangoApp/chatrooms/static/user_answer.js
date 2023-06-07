@@ -1,7 +1,7 @@
 
 const taskName = window.taskName;
 const studentName = window.studentName;
- 
+
 const chatSocket = new WebSocket(
             'ws://'
             + window.location.host

@@ -148,6 +148,8 @@
     <script>
         window.roomName = '{{ room_name }}';
         window.userName = {{ username }};
+        window.isTeacher = '{{is_owner}}';
+        console.log(window.isTeacher);
         function submitAnswer() {
             var photoInput = document.getElementById('photoInput');
             var file = photoInput.files[0];

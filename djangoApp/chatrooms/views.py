@@ -39,10 +39,13 @@ def createtask(request, room_name):
 
 
 def task(request, room_name, task_name):
+    classroom = Classroom.objects.get(token=room_name)
+    is_owner = (classroom.owner == request.user)
     return render(request, 'task.html', {
         'room_name': room_name,
         'username': mark_safe(json.dumps(request.user.username)),
-        'task_name': task_name
+        'task_name': task_name,
+        'is_owner': is_owner
     })
 def user_answer(request, room_name, task_name,student_name):
     return render(request, 'user_answer.html', {

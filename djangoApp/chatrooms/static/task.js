@@ -2,6 +2,8 @@ const url = window.location.href;
 var id = url.replace(/\/$/, "").split("/").pop();
 var roomName = window.roomName;
 var ans;
+const isTeacher = window.isTeacher;
+console.log(isTeacher);
 const chatSocket = new WebSocket(
     'ws://' +
     window.location.host +
@@ -12,7 +14,10 @@ const chatSocket = new WebSocket(
 chatSocket.onopen = function(e) {
     console.log('Hello');
     getTask();
-   getUsersAnswers();
+    if(isTeacher==='True'){
+        console.log(isTeacher);
+        getUsersAnswers();
+    }
 
 };
 
