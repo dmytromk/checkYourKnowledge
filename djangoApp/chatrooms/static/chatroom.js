@@ -101,7 +101,6 @@ function createTask(tasks,answers) {
     div.style.margin = '10px 0';
 
 
-
     // Create the task name element
     var taskName = document.createElement('h3');
     taskName.style.fontWeight = 'bold';
@@ -119,6 +118,7 @@ function createTask(tasks,answers) {
     div.addEventListener('click', function() {
         window.location.pathname = '/chat/' + roomName + '/' + id + '/';
     });
+
 
 
     var parentElement = document.getElementById('content');
@@ -149,7 +149,10 @@ function createMessage(data) {
     if (from === username) {
         usernameElement.textContent = 'You';
     } else {
+
         usernameElement.textContent = from;
+ 
+    
     }
     messageContentElement.appendChild(usernameElement);
     const messageTextElement = document.createElement('div');
