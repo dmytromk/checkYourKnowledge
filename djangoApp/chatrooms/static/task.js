@@ -118,10 +118,19 @@ chatSocket.onmessage = function(e) {
 };
 function createUserAnswer(data){
     const div = document.createElement('div');
-    div.innerText =  data['author_of_answer'] + ':' + data['answer'];
+    div.className = 'user-answer-div';
+    
+    const answer = document.createElement('div');
+    const user = document.createElement('div');
+    answer.className = 'small-text';
+    user.className = 'big-text';
+    answer.innerText = 'Answer'  + ':' + data['answer'];
+    user.innerText = 'Author: ' + data['author_of_answer'];
     div.addEventListener('click', function() {
         window.location.pathname = '/chat/' + roomName + '/' + id + '/' + data['author_of_answer'];
     });
+    div.appendChild(user);
+    div.appendChild(answer);
     document.querySelector('#user_ans').appendChild(div);
 }
 function submitAnswer() {
