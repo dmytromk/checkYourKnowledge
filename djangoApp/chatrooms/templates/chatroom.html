@@ -157,6 +157,7 @@
          #generate-link {
         float: right;
         margin-right: 10px;
+        margin-left: auto;
     }
 
     #codeField {
@@ -318,11 +319,11 @@
     }
     
     .right-button {
-      margin-left: auto;
+     
     }
        .separator {
       height: 2px;
-      background-color: #6BBB69;
+      background-color: #D3D46A;
       margin: 10px 0;
     }
     </style>
@@ -336,7 +337,7 @@
     <div class="logo">
        <img src="https://upload.wikimedia.org/wikipedia/commons/5/59/Google_Classroom_Logo.png">
     </div>
-    <button class="button right-button">Right Button</button>
+     <button id="generate-link" class="btn">Generate Link</button>
   </header>
   <div class="separator"></div>
 
@@ -354,7 +355,7 @@
     </div>
 </div>
 
-<hr>
+  <div class="separator"></div>
 
 <div class="popup">
 </div>
@@ -371,7 +372,7 @@
 
 {% if is_owner %}
 
-      <button id="generate-link" class="btn">Generate Link</button>
+     
 
   <dialog id="generate-link-dialog">
     <div class="dialog-content">
