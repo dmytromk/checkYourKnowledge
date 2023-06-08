@@ -83,7 +83,7 @@ function createTask(tasks,answers) {
 
     var div = document.createElement('div');
     div.style.color = "#fff"
-    div.style.backgroundColor = '#3498db';
+    div.style.backgroundColor = '#85BE1E';
     div.style.padding = '10px';
     console.log(tasks);
 
@@ -92,10 +92,10 @@ function createTask(tasks,answers) {
     }
 
     else if(answers['answer'] === tasks['content_answer']){
-        div.style.backgroundColor = '#00FF00';
+        div.style.backgroundColor = '#85BE1E';
     }
     else if(answers['answer'] != tasks['content_answer']){
-        div.style.backgroundColor = '#FF0000';
+        div.style.backgroundColor = '#B92119';
     }
     div.style.cursor = 'pointer';
     div.style.margin = '10px 0';

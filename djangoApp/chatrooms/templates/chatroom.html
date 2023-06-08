@@ -424,8 +424,9 @@ document.getElementById("generate-link").addEventListener("click", function() {
 
 // Add event listener to close the dialog
 closeButton.addEventListener("click", function() {
-  generateLinkDialog.classList.remove("open"); // Hide dialog
-  generateLinkDialog.classList.add("fade-exit"); // Add fade-exit class
+  generateLinkDialog.classList.remove("open"); 
+  generateLinkDialog.classList.add("fade-exit");
+   
   setTimeout(function() {
     generateLinkDialog.close();
     generateLinkDialog.classList.remove("fade-exit", "fade-exit-active"); 
