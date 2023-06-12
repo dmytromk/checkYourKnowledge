@@ -54,6 +54,22 @@ class ClassroomToJson(ObjectToJsonConverter):
         for classroom in classrooms:
             result.append(self.convert_single(classroom))
         return result
+
+class UserToJson(ObjectToJsonConverter):
+    def convert_single(self, user):
+        return {
+            'name': user.username,
+            'avatarLink': user.avatar_link,
+            'firstName': user.first_name,
+            'lastName': user.last_name,
+        }
+
+    def convert_multiple(self, users):
+        result = []
+        for user in users:
+            result.append(self.convert_single(user))
+        return result
+
 class AnswerToJson(ObjectToJsonConverter):
     def convert_single(self, answer):
 

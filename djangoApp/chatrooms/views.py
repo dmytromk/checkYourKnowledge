@@ -19,18 +19,24 @@ def home(request):
 
 @login_required
 def room(request, room_name):
-    classroomlist = [x.classroom for x in ClassroomUserList.objects.filter(user=request.user)]
-    jsonConverter = JsonConverter.JsonConverterContext(JsonConverter.ClassroomToJson())
-    classrooms = jsonConverter.convert_multiple(classroomlist)
     classroom = Classroom.objects.get(token=room_name)
     is_owner = (classroom.owner == request.user)
+
+    classroomlist = [x.classroom for x in ClassroomUserList.objects.filter(user=request.user)]
+    jsonConverter = JsonConverter.JsonConverterContext(JsonConverter.ClassroomToJson())
+    classroomlist = jsonConverter.convert_multiple(classroomlist)
+
+    users_list = [x.user for x in ClassroomUserList.objects.filter(classroom = classroom)]
+    jsonConverter = JsonConverter.JsonConverterContext(JsonConverter.UserToJson())
+    users_list = jsonConverter.convert_multiple(users_list)
 
     return render(request, 'chatroom.html', {
         'room_name': room_name,
         'username': mark_safe(json.dumps(request.user.username)),
         'classroom': classroom,
         'is_owner': is_owner,
-        'classroomlist': classrooms,
+        'classroomlist': classroomlist,
+        'usersList': users_list,
     })
 
 

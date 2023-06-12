@@ -51,7 +51,6 @@ INSTALLED_APPS = [
     'chatrooms',
     'account',
     'channels',
-    'bootstrap5',
     'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
