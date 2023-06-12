@@ -14,11 +14,28 @@
 
     <ul class="answers-list">
         {% for answer in answers_list %}
-            <li>{{ answer.task_id }} - Points: {{ answer.points }}</li>
+            <li>{{ answer.task_id }} - Points: {{ answer.answer_points }} / {{ answer.max_points }}</li>
         {% endfor %}
     </ul>
 
     <hr>
 
-    <p class="total">Total: {{ answers_list|length }} tasks</p>
+    <p class="total">Total points: <span id="total-points"></span></p>
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            // Get the answers dictionary from your Django template
+            const answersDict = {{ answers_list|safe }};
+
+            let totalPoints = 0;
+
+            answersDict.forEach(function(item) {
+
+                totalPoints += parseInt(item['answer_points']);
+            });
+            // Update the total points element
+            const totalPointsElement = document.getElementById('total-points');
+            totalPointsElement.textContent = totalPoints.toString();
+        });
+    </script>
+
 {% endblock %}

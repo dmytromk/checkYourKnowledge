@@ -4,7 +4,7 @@ from django import forms
 import json
 from django.contrib.auth.decorators import login_required
 from .forms import *
-from .models import Classroom, ClassroomUserList, Answer
+from .models import Classroom, ClassroomUserList, Answer, Task_model
 from . import JsonConverter
 from django.contrib.auth import get_user_model
 User = get_user_model()
@@ -121,7 +121,42 @@ def report_generation(request):
     classroom_token = request.GET.get('token')
     user = User.objects.get(id=user_id)
     answers = Answer.objects.filter(author_of_answer=user.username, classroom_token=classroom_token)
-    answerToJson = JsonConverter.JsonConverterContext(JsonConverter.AnswerToJson())
-    userToJson = JsonConverter.JsonConverterContext(JsonConverter.UserToJson())
+    tasks = Task_model.objects.filter(classroom_name = classroom_token)
 
-    return render(request, 'report_generation.html', {'answers_list': answerToJson.convert_multiple(answers), 'user': userToJson.convert_single(user)})
+    merged_items = []
+
+    # Merge and iterate over the querysets using zip()
+    for task, answer in zip(tasks, answers):
+        if task.id == answer.task_id:
+            task_id = task.id
+            author = task.author.username
+            content_problem = task.content_problem
+            content_answer = task.content_answer
+            content_id = task.content_id
+            classroom_name = task.classroom_name
+            answer_points = answer.points
+            task_name = task.task_name
+
+            # Assign the points attribute directly to max_points
+            max_points = task.points
+
+            # Create a dictionary with the merged item
+            merged_item = {
+                'task_id': task_id,
+                'author': author,
+                'content_problem': content_problem,
+                'content_answer': content_answer,
+                'content_id': content_id,
+                'classroom_name': classroom_name,
+                'answer_points': answer_points,
+                'max_points': max_points,
+                'task_name': task_name
+            }
+
+            # Append the merged item to the list
+            merged_items.append(merged_item)
+
+    userToJson = JsonConverter.JsonConverterContext(JsonConverter.UserToJson())
+    resultToJson = JsonConverter.JsonConverterContext(JsonConverter.ReportAnswersToJson())
+
+    return render(request, 'report_generation.html', {'answers_list': resultToJson.convert_multiple(merged_items), 'user': userToJson.convert_single(user)})

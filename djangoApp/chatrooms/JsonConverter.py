@@ -88,6 +88,27 @@ class AnswerToJson(ObjectToJsonConverter):
             result.append(self.convert_single(answer))
         return result
 
+class ReportAnswersToJson(ObjectToJsonConverter):
+    def convert_single(self, result):
+
+        return {
+            'task_id': result['task_id'],
+            'author': result['author'],
+            'content_problem': result['content_problem'],
+            'content_answer': result['content_answer'],
+            'content_id': result['content_id'],
+            'classroom_name': result['classroom_name'],
+            'answer_points': result['answer_points'],
+            'max_points': result['max_points'],
+            'task_name': result['task_name']
+        }
+
+    def convert_multiple(self, results):
+        final = []
+        for result in results:
+            final.append(self.convert_single(result))
+        return final
+
 class JsonConverterContext:
     def __init__(self, converter):
         self.converter = converter
