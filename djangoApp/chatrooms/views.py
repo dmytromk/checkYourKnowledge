@@ -4,8 +4,11 @@ from django import forms
 import json
 from django.contrib.auth.decorators import login_required
 from .forms import *
-from .models import Classroom, ClassroomUserList
+from .models import Classroom, ClassroomUserList, Answer
 from . import JsonConverter
+from django.contrib.auth import get_user_model
+User = get_user_model()
+
 
 @login_required
 def home(request):
@@ -111,3 +114,14 @@ def join_class(request):
         form = JoinClassForm()
 
     return render(request, 'join_classroom.html', {'form': form})
+
+@login_required()
+def report_generation(request):
+    user_id = request.GET.get('user_id')
+    classroom_token = request.GET.get('token')
+    user = User.objects.get(id=user_id)
+    answers = Answer.objects.filter(author_of_answer=user.username, classroom_token=classroom_token)
+    answerToJson = JsonConverter.JsonConverterContext(JsonConverter.AnswerToJson())
+    userToJson = JsonConverter.JsonConverterContext(JsonConverter.UserToJson())
+
+    return render(request, 'report_generation.html', {'answers_list': answerToJson.convert_multiple(answers), 'user': userToJson.convert_single(user)})

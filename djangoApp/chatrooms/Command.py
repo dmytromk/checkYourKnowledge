@@ -271,3 +271,20 @@ class ChangeScoreCommand(Command):
         username = self.data['username']
         new_points = self.data['points']
         Answer.objects.all().filter(task_id=id, classroom_token=classroom_token, author_of_answer = username).update(points=new_points)
+
+
+# class GenerateStudentReport(Command):
+#     def __init__(self, consumer, data):
+#         self.consumer = consumer
+#         self.data = data
+#
+#     async def execute(self):
+#         user_id = self.data['user_id']
+#         classroom_token = self.data['token']
+#         user = User.objects.get(id=user_id)
+#         answers = Answer.objects.filter(author_of_answer=user.username, classroom_token = classroom_token)
+#         answerToJson = JsonConverter.JsonConverterContext(JsonConverter.AnswerToJson())
+#         await self.consumer.send(text_data=json.dumps({
+#             'type': 'generate_report',
+#             'answers_list': answerToJson.convert_multiple(answers)
+#         }))

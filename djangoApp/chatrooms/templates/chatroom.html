@@ -480,6 +480,11 @@
                 userdiv.id = 'usercard-' + temp.toString();
                 ttemp++;
 
+                let userbutton = document.createElement('button');
+                userbutton.id = 'userbutton' + user.user_id.toString();
+                userbutton.textContent = 'Generate report';
+                userbutton.style = 'width:auto; height: auto;'
+
                 userdiv.classList.add('usercard');
 
                 // Create an img element for the image
@@ -507,6 +512,9 @@
                 // Append the header and paragraph elements to the div
                 userdiv.appendChild(header);
                 userdiv.appendChild(realName);
+                if(window.isOwner == 'True') {
+                    userdiv.appendChild(userbutton);
+                }
                 userdiv.appendChild(line);
                 userPopup.appendChild(userdiv);
             });
@@ -522,6 +530,21 @@
                     userPopup.classList.remove("active"); // Remove the 'active' class if clicked outside the popup
                 }
             });
+
+            console.log('HEre');
+            const buttons = document.querySelectorAll('[id^="userbutton"]');
+            console.log('yup');
+            // Add event listeners to each button
+            buttons.forEach((button) => {
+                console.log('sad');
+                button.addEventListener('click', () => {
+                    console.log('Works');
+                    const buttonIndex = parseInt(button.getAttribute('id').substring(10));
+                    const url = `/chat/report/?user_id=${buttonIndex}&token=${roomName}`;
+                    window.location.href = url;
+                });
+            });
+            console.log('yup1');
     });
 </script>
 </body>

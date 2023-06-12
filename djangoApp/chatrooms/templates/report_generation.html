@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Student report{% endblock %}
+{% load static %}
+
+{% block content %}
+    <h1 class="center">Student Report</h1>
+
+    <div class="student-info">
+        <h2>{{ user.name }}</h2>
+        <p>Last Name: {{ user.lastName }}</p>
+        <p>First Name: {{ user.firstName }}</p>
+        <img src="{{ user.avatarLink }}" alt="Avatar" width="120" height="120">
+    </div>
+
+    <ul class="answers-list">
+        {% for answer in answers_list %}
+            <li>{{ answer.task_id }} - Points: {{ answer.points }}</li>
+        {% endfor %}
+    </ul>
+
+    <hr>
+
+    <p class="total">Total: {{ answers_list|length }} tasks</p>
+{% endblock %}

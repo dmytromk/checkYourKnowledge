@@ -62,6 +62,7 @@ class UserToJson(ObjectToJsonConverter):
             'avatarLink': user.avatar_link,
             'firstName': user.first_name,
             'lastName': user.last_name,
+            'user_id': user.id,
         }
 
     def convert_multiple(self, users):
