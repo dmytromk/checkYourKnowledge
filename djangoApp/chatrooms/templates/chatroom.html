@@ -431,6 +431,7 @@
 
             // Assign an ID to the div
             classroomdiv.id = 'classcard-' + temp.toString();
+            classroomdiv.style = 'width:100%; text-align:center;'
             temp++;
 
             classroomdiv.classList.add('classcard');
@@ -441,8 +442,12 @@
             // Set the text content of the header to the classroom name
             header.textContent = classroom.name;
 
+            let line = document.createElement('hr');
+            line.style = 'margin-top:15px; margin-bottom: 15px'
+
             // Append the header and paragraph elements to the div
             classroomdiv.appendChild(header);
+            classroomdiv.appendChild(line);
 
             classroomdiv.addEventListener('click', function() {
                 let currentURL = window.location.origin; // Get the current URL
