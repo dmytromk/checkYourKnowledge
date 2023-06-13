@@ -1,41 +1,250 @@
 {% extends "base.html" %}
+{% block styles %}
+    <style>
+        /* Center the content within the block */
+        .center {
+            text-align: left;
+        }
+
+        /* Remove bullets from the unordered list */
+        .answers-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        /* Style blocks for each part */
+        .block {
+            margin-bottom: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f7f7f7;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Style block titles */
+        .block-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        /* Highlight the total result */
+        .summary .total {
+            font-weight: bold;
+            color: red;
+            font-size: 20px;
+        }
+
+        /* Adjust block header position */
+        .block-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 10px;
+        }
+
+        .block-header h2 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: bolder;
+            text-decoration: underline;
+        }
+
+        .liclass {
+            padding: 15px;
+        }
+
+        /* Increase font size for report info */
+        .report-info {
+            font-size: 18px;
+        }
+
+        .answers-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .answers-table th,
+        .answers-table td {
+            padding: 15px;
+            text-align: left;
+            vertical-align: middle;
+            border-bottom: 1px solid #ccc;
+            font-size: 18px;
+        }
+
+        .answers-table th {
+            font-weight: bold;
+        }
+
+    </style>
+{% endblock %}
+
 {% block title %}Student report{% endblock %}
 {% load static %}
 
 {% block content %}
-    <h1 class="center">Student Report</h1>
 
-    <div class="student-info">
-        <h2>{{ user.name }}</h2>
-        <p>Last Name: {{ user.lastName }}</p>
-        <p>First Name: {{ user.firstName }}</p>
-        <img src="{{ user.avatarLink }}" alt="Avatar" width="120" height="120">
+    <div class="block" id="pdf-content">
+        <div class="block-header">
+            <h2 class="block-title">Student Info</h2>
+        </div>
+        <div class="center">
+            <p class="report-info">Username: {{ user.name }}</p>
+            <p class="report-info">Last Name: {{ user.lastName }}</p>
+            <p class="report-info">First Name: {{ user.firstName }}</p>
+            <img src="{{ user.avatarLink }}" alt="Avatar" id="avatar-image" width="120" height="120">
+        </div>
     </div>
 
-    <ul class="answers-list">
-        {% for answer in answers_list %}
-            <li>{{ answer.task_id }} - Points: {{ answer.answer_points }} / {{ answer.max_points }}</li>
-        {% endfor %}
-    </ul>
+    <div class="block">
+        <div class="block-header">
+            <h2 class="block-title">Results</h2>
+        </div>
+        <div class="center">
+            <table class="answers-table">
+                <thead>
+                <tr>
+                    <th class="liclass">Task</th>
+                    <th class="liclass">Points</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for answer in answers_list %}
+                    <tr>
+                        <td class="report-info liclass">{{ answer.task_id }}</td>
+                        <td class="report-info liclass">{{ answer.answer_points }} / {{ answer.max_points }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-    <hr>
+    <div class="block summary">
+        <div class="block-header">
+            <h2 class="block-title">Summary</h2>
+        </div>
+        <div class="center">
+            <p class="total" id="totalres">Total points: <span id="total-points"></span> / <span id="total-points-max"></span></p>
+        </div>
+    </div>
 
-    <p class="total">Total points: <span id="total-points"></span></p>
+    <button onclick="downloadReport()">Download PDF</button>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/vfs_fonts.js"></script>
+
     <script>
-        window.addEventListener('DOMContentLoaded', () => {
-            // Get the answers dictionary from your Django template
-            const answersDict = {{ answers_list|safe }};
+        let totalPointsEarned = 0;
+        let totalPointsMax = 0;
 
-            let totalPoints = 0;
+        // Get the answers dictionary from your Django template
+        const answersDict = {{ answers_list|safe }};
 
-            answersDict.forEach(function(item) {
+        function downloadReport() {
+            const username = "{{ user.name }}";
+            const lastName = "{{ user.lastName }}";
+            const firstName = "{{ user.firstName }}";
+            let content = [];
 
-                totalPoints += parseInt(item['answer_points']);
+            content.push({ text: 'Student Report', style: 'header' });
+
+            // Student Info block
+            content.push({ text: 'Student Info', style: 'block-title' });
+            content.push({
+                layout: 'noBorders',
+                table: {
+                    widths: [100, '*'],
+                    body: [
+                        ['Username:', username],
+                        ['Last Name:', lastName],
+                        ['First Name:', firstName]
+                    ]
+                }
             });
+
+            // Results block
+            content.push({ text: 'Results', style: 'block-title' });
+
+            const tableContent = [];
+            tableContent.push([{ text: 'Task', bold: true, fontSize: 13}, { text: 'Points', bold: true, fontSize: 13 }]); // Column names
+
+            for (const answer of answersDict) {
+                const taskCell = { text: answer.task_id };
+                const pointsCell = { text: answer.answer_points + ' / ' + answer.max_points };
+
+                tableContent.push([taskCell, pointsCell]);
+            }
+
+            content.push({
+                table: {
+                    widths: ['*', '*'], // Equal space for columns
+                    body: tableContent
+                }
+            });
+
+            // Summary block
+            content.push({ text: 'Summary', style: 'block-title' });
+            content.push({
+                layout: 'noBorders',
+                table: {
+                    widths: [100, '*', '*'],
+                    body: [
+                        ['Total points:', { text: totalPointsEarned + ' / ' + totalPointsMax, style: 'total' }, '']
+                    ]
+                }
+            });
+
+            const totalPointsColor = totalPointsEarned / totalPointsMax < 0.6 ? 'red' : 'green';
+
+            const docDefinition = {
+                content: content,
+                styles: {
+                    header: {
+                        fontSize: 22,
+                        bold: true,
+                        alignment: 'center',
+                        margin: [0, 0, 0, 20]
+                    },
+                    'block-title': {
+                        fontSize: 18,
+                        bold: true,
+                        margin: [0, 10, 0, 5],
+                        decoration: 'underline'
+                    },
+                    total: {
+                        fontSize: 16,
+                        bold: true,
+                        color: totalPointsColor
+                    },
+
+                },
+
+            };
+
+
+
+            pdfMake.createPdf(docDefinition).download('report_'+ username +'.pdf');
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            answersDict.forEach(function(item) {
+                totalPointsEarned += parseInt(item['answer_points']);
+                totalPointsMax += parseInt(item['max_points']);
+            });
+
             // Update the total points element
             const totalPointsElement = document.getElementById('total-points');
-            totalPointsElement.textContent = totalPoints.toString();
+            const totalPointsMaxElement = document.getElementById('total-points-max');
+            totalPointsElement.textContent = totalPointsEarned.toString();
+            totalPointsMaxElement.textContent = totalPointsMax.toString();
+            if(totalPointsEarned/totalPointsMax >= 0.6) {
+                const totalres = document.getElementById('totalres');
+                totalres.style = 'color:green;'
+            }
         });
     </script>
-
 {% endblock %}

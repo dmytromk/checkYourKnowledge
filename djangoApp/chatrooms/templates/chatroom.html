@@ -503,6 +503,9 @@
 
                 // Set the text content of the header to include the login and name
                 header.textContent = user.name;
+                if(user.name == window.userName){
+                    header.textContent+=' (You)';
+                }
                 header.style = 'margin:10px'
 
                 let realName = document.createElement('p');
@@ -512,7 +515,7 @@
                 // Append the header and paragraph elements to the div
                 userdiv.appendChild(header);
                 userdiv.appendChild(realName);
-                if(window.isOwner == 'True') {
+                if(window.isOwner == 'True' && user.name != window.userName) {
                     userdiv.appendChild(userbutton);
                 }
                 userdiv.appendChild(line);
@@ -531,20 +534,15 @@
                 }
             });
 
-            console.log('HEre');
             const buttons = document.querySelectorAll('[id^="userbutton"]');
-            console.log('yup');
             // Add event listeners to each button
             buttons.forEach((button) => {
-                console.log('sad');
                 button.addEventListener('click', () => {
-                    console.log('Works');
                     const buttonIndex = parseInt(button.getAttribute('id').substring(10));
                     const url = `/chat/report/?user_id=${buttonIndex}&token=${roomName}`;
                     window.location.href = url;
                 });
             });
-            console.log('yup1');
     });
 </script>
 </body>
