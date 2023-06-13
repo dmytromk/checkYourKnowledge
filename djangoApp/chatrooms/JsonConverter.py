@@ -46,7 +46,8 @@ class ClassroomToJson(ObjectToJsonConverter):
 
         return {
             'name': classroom.name,
-            'token': classroom.token
+            'token': classroom.token,
+            'owner': classroom.owner.username,
         }
 
     def convert_multiple(self, classrooms):

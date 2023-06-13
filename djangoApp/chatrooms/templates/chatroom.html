@@ -363,7 +363,8 @@
 <script>
     window.userName = {{username}};
     window.roomName = '{{room_name}}';
-    window.isOwner = '{{is_owner}}'
+    window.isOwner = '{{is_owner}}';
+
 </script>
 <script src="{% static 'chatroom.js' %}"></script>
 <script>
@@ -469,6 +470,7 @@
             var userPopup = document.querySelector(".userslistPopup");
 
             const userlist = {{ usersList|safe }};
+            const classroom = {{ classroom|safe }};
             let ttemp = 0;
 
             userlist.forEach(function(user) {
@@ -506,6 +508,11 @@
                 if(user.name == window.userName){
                     header.textContent+=' (You)';
                 }
+
+                if(user.name == classroom.owner){
+                    header.textContent+=' (Owner)';
+                }
+
                 header.style = 'margin:10px'
 
                 let realName = document.createElement('p');
